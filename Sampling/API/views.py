@@ -34,13 +34,13 @@ def stratified_sampling(request):
     # response = requests.post(url, json =payload,headers=headers)
     # Yi = response['classifiedData']
     
-
+    ni =[1,1,1]
     # Call dowellstratifiedsampling function
-    output = dowell_stratified_sampling_proportional(Yi, N, n, k, Ni_list, ni_list)
+    output = dowell_stratified_sampling_proportional(Yi, N, n, k, Ni, ni)
     cities = output[0]
     process_time = output[1]
     
-    response = {'cities': output, 'process_time': process_time}
+    response = {'cities': cities, 'process_time': process_time}
 
     return JsonResponse(response)
 def get_data(request):
