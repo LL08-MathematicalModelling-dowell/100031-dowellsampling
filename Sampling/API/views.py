@@ -1,12 +1,11 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse, HttpResponse
 import json
-
 import requests
-from API.functions.stratifiedSampling import dowellStratifiedSampling
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from API.new_functions.stratifiedsampling import dowellstratifiedsampling
+from API.new_functions.stratifiedsampling import dowell_stratified_sampling_proportional
+from API.new_functions.sample_size import dowell_sample_size
 
 @csrf_exempt
 # @api_view(['POST'])
@@ -17,22 +16,16 @@ def stratified_sampling(request):
     if response.status_code == 200:
         json_data = response.json()
         data = json_data['finalOutput']
-    city_to_num = {}
-    num_to_city = {}
-    flat_data = []
-    for city_list in data:
-        for city in city_list:
-            if city not in city_to_num:
-                num = len(city_to_num)
-                city_to_num[city] = num
-                num_to_city[num] = city
-            flat_data.append(city_to_num[city])
-    Yi = flat_data
-    N = 60
-    n = 7
-    k = 5
-    Ni_list = [9,5,20,19,3,4,5,6,7,]
-    ni_list = [2, 1, 1, 4,1,9]
+ 
+    Yi = data
+    N = 6
+    k = 3
+    Ni = [2, 2, 2]
+    margin_of_error = 0.05
+    confidence_level = 0.95
+
+    # Calculate sample size using the dowell_sample_size() function
+    n = dowell_sample_size(N, k, Ni, margin_of_error, confidence_level)
     # Call external API to get population units data
     # url = "http://100061.pythonanywhere.com/api/"
     # inserted_id = "63d8ed59790d8f03c13189aa"
@@ -43,12 +36,11 @@ def stratified_sampling(request):
     
 
     # Call dowellstratifiedsampling function
-    output = dowellstratifiedsampling(Yi, N, n, k, Ni_list, ni_list)
+    output = dowell_stratified_sampling_proportional(Yi, N, n, k, Ni_list, ni_list)
     cities = output[0]
     process_time = output[1]
-    final_output = [num_to_city[num] for num in cities]
     
-    response = {'cities': final_output, 'process_time': process_time}
+    response = {'cities': output, 'process_time': process_time}
 
     return JsonResponse(response)
 def get_data(request):
@@ -57,19 +49,7 @@ def get_data(request):
             ["India", "Germany"],
             ["Uttar Pradesh", "Georgia"],
             ["Pune", "Munich"],
-            ["Mumbai", "Berlin"],
-            ["Delhi", "Hamburg"],
-            ["Bangalore", "Frankfurt"],
-            ["Chennai", "Stuttgart"],
-            ["Kolkata", "Dresden"],
-            ["Hyderabad", "Cologne"],
-            ["Ahmedabad", "Leipzig"],
-            ["Jaipur", "Dortmund"],
-            ["Surat", "Essen"],
-            ["Lucknow", "Düsseldorf"],
-            ["Kanpur", "Bremen"],
-            ["Nagpur", "Hanover"],
-            ["Patna", "Duisburg"],
+            ["Mumbai", "Berlin"]
         ]
     }
     return JsonResponse(data)
