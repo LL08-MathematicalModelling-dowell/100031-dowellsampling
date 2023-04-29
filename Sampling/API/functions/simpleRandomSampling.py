@@ -1,7 +1,7 @@
-from sampleSize import dowellSampleSize
-from geometricalApproach import dowellGeometricalFunction
-from randomGeneration import dowellRandomGeneration
-from mechanicalRandomisation import dowellRandomTable
+from API.functions.sampleSize import dowellSampleSize
+from API.functions.geometricalApproach import dowellGeometricalFunction
+from API.functions.randomGeneration import dowellRandomGeneration
+from API.functions.mechanicalRandomisation import dowellRandomTable
 from statistics import pvariance
 from random import shuffle
 
