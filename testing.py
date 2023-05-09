@@ -45,7 +45,7 @@ def dowell_sample_size(N, k, Ni, margin_of_error, confidence_level):
 # Example usage:
 # Example input
 Yi = [["India", "Germany"], ["Uttar Pradesh", "Lucknow"], ["Pune", "Munich"]]
-N = 6
+N = 600
 k = 3
 Ni = [2, 2, 2]
 margin_of_error = 0.05

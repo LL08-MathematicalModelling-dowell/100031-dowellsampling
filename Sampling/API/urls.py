@@ -4,4 +4,5 @@ from . import views
 urlpatterns = [
     path('stratified/', views.stratified_sampling,name='stratified_sampling'),
     path('get_data/', views.get_data,name='get_data'),
+    path('systematic/', views.systematic_sampling,name='systematic_sampling'),
 ]

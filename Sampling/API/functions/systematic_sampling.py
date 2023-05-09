@@ -3,7 +3,9 @@ from random import randrange, uniform
 
 
 def dowellSystematicSampling():
-    n, N = dowellSampleSize()
+    N = 5
+    # n = dowellSampleSize()
+    n = 2
     Yi_input = input("Enter the population values(comma separated): ")
     # assumes values are integers
     Yi = [int(i) for i in Yi_input.split(",")]
@@ -22,9 +24,8 @@ def dowellSystematicSampling():
             i -= 1
         # select first unit randomly
         Yi = Yi[i:] + Yi[:i]
+        k = round(k)
         sample_units = [Yi[ind] for ind in range(i, N, k)]
     return sample_units
-
-
-if __name__ == "__main__":
-    print(dowell_systematic_sampling())
+a = dowellSystematicSampling()
+print(a)
