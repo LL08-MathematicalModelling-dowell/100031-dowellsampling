@@ -7,6 +7,8 @@ from API.functions.stratifiedSampling import dowellStratifiedSampling
 from API.functions.sampleSize import dowellSampleSize
 from API.functions.systematic_sampling import dowellSystematicSampling
 from API.functions.simpleRandomSampling import dowellSimpleRandomSampling
+from API.functions.clusterSampling import dowellClusterSampling
+
 
 
 @csrf_exempt
@@ -112,6 +114,32 @@ def simple_random_sampling(request):
 
 def sampling_input(request):
     return render(request, 'sampling_inputs.html')
+
+def sampling_input(request):
+    return render(request, 'sampling_inputs.html')
+
+def cluster_sampling(request):
+    if request.method == 'POST':
+        Yi = get_YI_data()
+        e = request.POST.get('e')
+        N = request.POST.get('N')
+        M = request.POST.get('M')
+        hi = request.POST.get('hi')
+
+        clusterSamplingInput = {
+            'Yi': Yi,
+            'e': float(e),
+            'N': int(N),
+            'M': int(M),            
+            'hi': int(hi)
+        }
+
+        samples = dowellClusterSampling(clusterSamplingInput)
+        response = {
+            'samples': samples
+        }
+    response = samples
+    return JsonResponse(response, safe=False)
 
 '''
 Types of sampling
