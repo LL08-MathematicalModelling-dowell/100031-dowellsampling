@@ -15,6 +15,7 @@
                     <option value="stratified">Stratified Sampling</option>
                     <option value="systematic">Systematic Sampling</option>
                     <option value="simple_random">Simple Random Sampling</option>
+                    <option value="cluster_sampling">Cluster Sampling</option>>
                 </select>
             </div>
         </form>
@@ -229,6 +230,81 @@ else if (selectedSamplingType === "simple_random") {
 }
 
 // ...
+else if (selectedSamplingType === "cluster_sampling") {
+
+        var clusterForm = document.createElement("form");
+        clusterForm.setAttribute("method", "POST");
+        clusterForm.setAttribute("action", "{% url 'cluster_sampling' %}");
+
+        var csrfToken = document.createElement("input");
+        csrfToken.setAttribute("type", "hidden");
+        csrfToken.setAttribute("name", "csrfmiddlewaretoken");
+        csrfToken.value = "{{ csrf_token }}";
+
+
+        var NLabel = document.createElement("label");
+        NLabel.setAttribute("for", "N");
+        NLabel.innerText = "population_size:";
+
+        var NInput = document.createElement("input");
+        NInput.setAttribute("type", "text");
+        NInput.setAttribute("id", "N");
+        NInput.setAttribute("name", "N");
+        NInput.required = true;
+
+        var eLabel = document.createElement("label");
+        eLabel.setAttribute("for", "e");
+        eLabel.innerText = "e:";
+
+        var eInput = document.createElement("input");
+        eInput.setAttribute("type", "text");
+        eInput.setAttribute("id", "e");
+        eInput.setAttribute("name", "e");
+        eInput.required = true;
+
+        var MLabel = document.createElement("label");
+        MLabel.setAttribute("for", "M");
+        MLabel.innerText = "M:";
+
+        var MInput = document.createElement("input");
+        MInput.setAttribute("type", "text");
+        MInput.setAttribute("id", "M");
+        MInput.setAttribute("name", "M");
+        MInput.required = true;        
+
+        var hiLabel = document.createElement("label");
+        hiLabel.setAttribute("for", "hi");
+        hiLabel.innerText = "hi:";
+
+        var hiInput = document.createElement("input");
+        hiInput.setAttribute("type", "text");
+        hiInput.setAttribute("id", "hi");
+        hiInput.setAttribute("name", "hi");
+        hiInput.required = true;            
+
+        var submitButton = document.createElement("input");
+        submitButton.setAttribute("type", "submit");
+        submitButton.setAttribute("value", "Submit");
+        submitButton.classList.add("btn", "btn-primary");
+
+        clusterForm.appendChild(csrfToken);
+
+        clusterForm.appendChild(NLabel);
+        clusterForm.appendChild(NInput);
+        clusterForm.appendChild(document.createElement("br"));
+        clusterForm.appendChild(eLabel);
+        clusterForm.appendChild(eInput);
+        clusterForm.appendChild(document.createElement("br"));
+        clusterForm.appendChild(MLabel);            
+        clusterForm.appendChild(MInput);            
+        clusterForm.appendChild(document.createElement("br"));
+        clusterForm.appendChild(hiLabel);            
+        clusterForm.appendChild(hiInput);
+        clusterForm.appendChild(document.createElement("br"));
+        clusterForm.appendChild(submitButton);
+
+        formContainer.appendChild(clusterForm);
+        }            
 
         }
     </script>
