@@ -1,24 +1,20 @@
-from sampleSize import dowellSampleSize
-from random import randrange
+from API.functions.sampleSize import dowellSampleSize
+
+import random
 
 
-def dowellClusterSampling():
-    m, N = dowellSampleSize()
-    Yi_input = input("Enter the population values(comma separated): ")
-    # assumes values are integers
-    Yi = [int(i) for i in Yi_input.split(",")]
-    # M = int(input("Enter the number of clusters: "))
-    hi = int(input("Enter the size of a cluster: "))
+def dowellClusterSampling(clusterSamplingInput):
+    Yi = clusterSamplingInput['Yi']
+    N =  clusterSamplingInput['N']                # Initializing population size
+    e = clusterSamplingInput['e']                 # Desired margin of error (5%)
+    M = clusterSamplingInput['M']                 # Initializing number of clusters
+    hi = clusterSamplingInput['hi']               # Initializing size of the cluster
+    m = dowellSampleSize(N, e) 
 
     # Divide the whole populaton into clusters of size "hi"
-    clusters = [Yi[i : i + hi] for i in range(0, N, hi)]
+    clusters = [Yi[i : i + hi] for i in range(0, M, hi)]
 
-    # Make sure that clusters are heterogenous by selecting non repeating
-    # samples from the cluster.
-    ind = [randrange(0, len(clusters)) for _ in range(m)]
+    # Make sure that clusters are heterogenous by selecting non repeating samples from the cluster.
+    ind = [random.randrange(0, len(clusters)) for _ in range(m)]
     sampled_clusters = [clusters[i] for i in ind]
     return sampled_clusters
-
-
-if __name__ == "__main__":
-    print(dowell_cluster_sampling())
