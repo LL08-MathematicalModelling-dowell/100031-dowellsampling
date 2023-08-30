@@ -1,45 +1,43 @@
-import random
-import time
+def dowellQuotaSampling(Yi, N, n, k, Ni, ni):
+    # Yi: List of population units
+    # N: Total population size
+    # n: Sample size
+    # k: Number of quotas
+    # Ni: Population quota for each quota
+    # ni: Sample quota for each quota
+    
+    quotas = []  # List to store sampled units from each quota
+    
+    # Divide the population into k quotas and sample from each quota
+    for _ in range(k):
+        quota = []  # List to store sampled units for this quota
+        
+        # Select ni sample units from each quota
+        for _ in range(ni):
+            if len(Yi) == 0:
+                print("Insufficient population units.")
+                break
+            
+            # Take the first Ni units from Yi for this quota
+            units = Yi[:Ni]
+            
+            # Remove the selected units from Yi
+            Yi = Yi[Ni:]
+            
+            quota.extend(units)
+        
+        quotas.append(quota)
+        
+    return quotas
 
-# Function to generate random numbers for i and j
-def dowell_random_generation(N, M):
-    i = random.randint(1, N)
-    j = random.randint(1, M)
-    return i, j
+# Example usage
+Yi = ['unit1', 'unit2', 'unit3', 'unit4', 'unit5', 'unit6', 'unit7', 'unit8', 'unit9', 'unit10']
+N = len(Yi)
+n = 20
+k = 3
+Ni = 3
+ni = 2
 
-# Function to calculate Dowell sample size
-def dowell_sample_size(N):
-    return int(0.05 * N)  # You can adjust the sampling rate as needed
-
-# Function to perform PPS sampling using Lahiri method
-def pps_sampling_lahiri(Population_units, Population_size, sample_size, size):
-    # Initialize the selected units list and process start time
-    selected_units = []
-    start_time = time.time()
-
-    while len(selected_units) < sample_size:
-        i, j = dowell_random_generation(Population_size, size)
-
-        if 1 <= i <= Population_size and 1 <= j <= size:
-            Si = Population_units[j - 1]  # Assuming index is 0-based
-            if j <= Si:
-                selected_units.append(i)
-        else:
-            print("Selected random numbers are not appropriate")
-
-    # Calculate process time
-    process_time = time.time() - start_time
-
-    return selected_units, process_time
-
-# Example values
-Population_units = [5, 3, 7, 2, 6, 4, 8, 1]  # Replace with your population units
-Population_size = len(Population_units)
-sample_size = dowell_sample_size(Population_size)
-size = max(Population_units)
-
-# Call the PPS sampling function
-sample_units, process_time = pps_sampling_lahiri(Population_units, Population_size, sample_size, size)
-
-print("Selected sample units:", sample_units)
-print("Process time:", process_time, "seconds")
+sampled_quotas = dowellQuotaSampling(Yi, N, n, k, Ni, ni)
+for idx, quota in enumerate(sampled_quotas, start=1):
+    print(f"Sampled units for Quota {idx}: {quota}")

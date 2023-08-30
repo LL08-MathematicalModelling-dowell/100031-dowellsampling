@@ -19,6 +19,7 @@ def calculate_sample_size(data):
             population_size = int(population_size)
             if population_size <= 0 or error <= 0:
                 return JsonResponse({'error': 'Invalid input. Population size and error must be positive.'}, status=400)
+            standard_deviation = calculate_standard_deviation(error, population_size, confidence_level)
             if standard_deviation is not None:
                 standard_deviation = float(standard_deviation)
                 sample_size, process_time, method_used = calculate_sample_size_with_known_sd(population_size, error, confidence_level, standard_deviation)
@@ -80,6 +81,17 @@ def get_z_score(confidence_level):
         return 2.58
     else:
         raise ValueError("Invalid confidence level. Supported values: 0.90, 0.95, 0.99")
+    
+    
+def calculate_standard_deviation(error, population_size, confidence_level):
+    try:
+        z = get_z_score(confidence_level)
+        numerator = (z ** 2 * population_size * (1 - error)) / (error ** 2)
+        return math.sqrt(numerator / population_size)
+    except (ValueError, ZeroDivisionError):
+        return None 
+
+
 
 @csrf_exempt
 def sample_size(request):
