@@ -2,7 +2,6 @@ import json
 import math
 import time
 from django.http import JsonResponse, HttpResponse
-from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from API.functions.API_Key_System import processApikey
 import random
@@ -43,7 +42,7 @@ def calculate_sample_size(data):
 def calculate_sample_size_with_known_sd(population_size, error, confidence_level, standard_deviation):
     process_time = 0
     z = get_z_score(confidence_level)
-    p = standard_deviation 
+    p = standard_deviation
     q = 1 - p
     numerator = (z ** 2) * p * q
     denominator = (error ** 2) * (1 + (((z ** 2) * p * q) / (error ** 2 * population_size)))
@@ -105,16 +104,16 @@ def sample_size(request):
 def sample_size_api(request, api_key):
     if (request.method=="POST"):
         data=json.loads(request.body)
-        validate_api_count = processApikey(api_key, "DOWELL100011")
+        validate_api_count = processApikey(api_key, "DOWELL10032")
         data_count = json.loads(validate_api_count)
         if data_count['success'] :
-            if data_count['count'] >= 0:
+            if data_count['total_credits'] >= 0:
                 return calculate_sample_size(data)
             else:
                 return JsonResponse({
                     "success": False,
                     "message": data_count['message'],
-                    "credits": data_count['count']
+                    "credits": data_count['total_credits']
                 })
         else:
             return JsonResponse({
