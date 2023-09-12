@@ -9,6 +9,5 @@ urlpatterns = [
     path('purposive_sampling/', views.purposive_sampling,name='purposive_sampling'),
     path('quota_sampling/',views.quota_sampling, name='quota_sampling'),
     path('pps/',views.pps_sampling,name='pps'),
-    
-    
+    path('',views.mainSampling, name = "samplings")
 ]

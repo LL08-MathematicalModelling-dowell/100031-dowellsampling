@@ -49,7 +49,7 @@ def calculate_sample_size_with_known_sd(population_size, error, confidence_level
     sample_size = numerator / denominator
     process_time = time.process_time()
     method_used = 'finite_population'
-    return sample_size, process_time, method_used
+    return math.ceil(sample_size), process_time, method_used
 
 def calculate_sample_size_using_slovin(population_size, error):
     process_time = 0
@@ -69,7 +69,7 @@ def calculate_sample_size_without_pop_size(error, confidence_level, standard_dev
     sample_size = (z ** 2 * p * (1 - p)) / (error ** 2)
     process_time = time.process_time()
     method_used = 'infinite_population'
-    return sample_size , process_time, method_used
+    return math.ceil(sample_size) , process_time, method_used
 
 def get_z_score(confidence_level):
     if confidence_level == 0.90:
