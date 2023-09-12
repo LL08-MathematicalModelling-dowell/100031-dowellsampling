@@ -143,12 +143,12 @@ def mainSampling(request):
             elif sampling == "simple_random_sampling":
                 error = raw_data.get("error")
                 method = raw_data.get("sampling_method")
-                n = dowellSampleSize(int(population_size), float(e))
+                n = dowellSampleSize(int(population_size), float(error))
                 simpleRandomSamplingInput = {
                     "insertedId": inserted_id,
                     "Yi": Yi,
                     "N": int(population_size),
-                    "e": float(e),
+                    "e": float(error),
                     "method": method,
                     "n": n,
                 }
