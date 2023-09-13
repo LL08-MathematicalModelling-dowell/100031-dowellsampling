@@ -1,6 +1,5 @@
 from random import randrange
 
-
 def dowellGeometricalFunction(N, n, Yi):
     # inscribe the circle randomly by starting from a random index
     start = randrange(0, N)

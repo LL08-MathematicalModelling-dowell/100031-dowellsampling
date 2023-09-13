@@ -1,5 +1,4 @@
 from API.functions.sampleSize import dowellSampleSize
-# from sampleSize import dowellSampleSize
 
 import random
 

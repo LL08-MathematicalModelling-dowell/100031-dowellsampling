@@ -1,15 +1,3 @@
-'''
-Population Units - Yi
-Population Size - N
-Sample Size - n
-Number of Stratas - k
-Population Strata Size - Ni
-Stratum Sample Size - ni
-Error - e
-Allocation Type - allocationType
-Replacement - replacement
-Method - method
-'''
 from API.functions.testDatabase import databaseTwo, databaseOne
 from API.functions.sampleSize import dowellSampleSize
 from API.functions.simpleRandomSampling import dowellSimpleRandomSampling

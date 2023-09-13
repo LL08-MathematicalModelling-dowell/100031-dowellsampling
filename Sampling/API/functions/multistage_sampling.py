@@ -1,11 +1,7 @@
 import time
-
 from API.functions.sampleSize import dowellSampleSize
 from API.functions.simpleRandomSampling import dowellSimpleRandomSampling
 from API.functions.stratifiedSampling import dowellStratifiedSampling
-
-
-
 
 def dowellmultistagesampling():
     # Define the number of stages

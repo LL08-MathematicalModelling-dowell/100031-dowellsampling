@@ -1,4 +1,3 @@
-
 from random import randint
 
 def dowellRandomTable(N, n, Yi):

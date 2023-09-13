@@ -6,7 +6,6 @@ from django.views.decorators.csrf import csrf_exempt
 from API.functions.API_Key_System import processApikey
 import random
 
-
 def calculate_sample_size(data):
     try:
         population_size = data.get('population_size')
@@ -24,7 +23,6 @@ def calculate_sample_size(data):
                 sample_size, process_time, method_used = calculate_sample_size_with_known_sd(population_size, error, confidence_level, standard_deviation)
             else:
                 sample_size, process_time, method_used = calculate_sample_size_using_slovin(population_size, error)
-
         else:
             if standard_deviation is not None:
                 standard_deviation = float(standard_deviation)

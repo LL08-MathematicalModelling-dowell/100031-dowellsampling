@@ -2,9 +2,7 @@ import random
 from API.functions.randomGeneration import dowellRandomGeneration
 from API.functions.sampleSize import dowellSampleSize
 import time
-import requests
 import json
-
 
 def dowellppsSampling(ppsSamplingInputs):
     
