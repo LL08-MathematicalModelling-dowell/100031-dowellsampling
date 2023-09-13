@@ -1,4 +1,3 @@
-from API.functions.testDatabase import databaseTwo, databaseOne
 from API.functions.sampleSize import dowellSampleSize
 from API.functions.simpleRandomSampling import dowellSimpleRandomSampling
 from API.functions.allocation import dowellEqualAllocation, dowellProportionalAllocation
