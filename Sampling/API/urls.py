@@ -2,5 +2,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('',views.mainSampling, name = "samplings")
+    path('',views.samplingInternalAPI, name = "Internal Sampling API"),
+    path('<str:api_key>/',views.samplingAPI, name = "Public Sampling API")
 ]
