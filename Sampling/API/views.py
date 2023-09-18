@@ -145,9 +145,9 @@ def all_sampling(raw_data):
             }
 
             samples = dowellClusterSampling(clusterSamplingInput)
-            id = get_event_id()  # Make sure you have a function for this
+            # id = get_event_id() 
             response = {
-                "samples": samples["sampleUnits"],
+                "samples": samples,
             }
 
             return (response)
