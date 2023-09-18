@@ -113,22 +113,22 @@ def all_sampling(raw_data):
             print("purposive sampling running ")
             error = raw_data.get("error")
             unit = raw_data.get("unit")
-            print("yi", Yi)
+            # print("yi", Yi)
             # new_yi = sum(Yi, [])
             # print("new yi",new_yi)
-            print("unit", unit)
+            # print("unit", unit)
             purposiveSamplingInput = {
                 "insertedId": inserted_id,
                 "Yi": Yi,
                 "unit": unit,
-                "e": float(error),
-                "N": int(population_size),
+                "error": float(error),
+                "populationSize": int(population_size),
             }
 
             samples = dowellPurposiveSampling(purposiveSamplingInput)
-            id = get_event_id()
+            # id = get_event_id()
             response = {
-                "samples": samples["sampleUnits"],
+                "samples": samples,
             }
             return (response)
 
@@ -202,10 +202,10 @@ def all_sampling(raw_data):
             return ({
                 "message":f"{sampling} is not valid."
             })
-    except:
+    except Exception as e:
         return ({
             "success":False,
-            "message":"Something went wrong"
+            "message": str(e)
         })
     
 @csrf_exempt

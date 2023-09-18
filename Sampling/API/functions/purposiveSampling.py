@@ -1,35 +1,26 @@
 from API.functions.sampleSize import dowellSampleSize
 
 def dowellPurposiveSampling(purposeiveSamplingInput):
-    print("purposive sampling input" , purposeiveSamplingInput)
-    N = purposeiveSamplingInput('N')
-    print("N",N)
-    e = purposeiveSamplingInput['e']
+    N = purposeiveSamplingInput['populationSize']
+    e = purposeiveSamplingInput['error']
     n = dowellSampleSize(N, e)
-    Yi = purposeiveSamplingInput['Yi']
     unit = purposeiveSamplingInput['unit']
-    unit = unit.split(",")
-    print("n", n)
-    print("unit",unit)
+    Yi = purposeiveSamplingInput['Yi']
     sample_values = []
-    unit_copy = unit[:]  # Make a copy of the unit list
+
+    unit_copy = Yi[:]
+    print("unit copy", unit_copy)
     while len(sample_values) < n:
         if len(unit_copy) == 0:
             print("Insufficient units in the 'unit' list.")
             break
 
-        units_inp = unit_copy.pop(0)  # Take the first element from the copied list
-
-        units = units_inp.split(",")
-
-        # Check if selected units are matching with the population units
-        for i in units:
-            if i not in Yi:
-                
-                print("Select another available unit")
-                break
+        unit = unit_copy.pop(0)
+        # print("unit", unit)
+        if unit in purposeiveSamplingInput['unit']:
+            sample_values.append(unit)
         else:
-            sample_values.append(units)
+            print("Unit not found in the provided unit list. Select another available unit.")
 
         if len(sample_values) == n:
             break
