@@ -110,19 +110,23 @@ def all_sampling(raw_data):
             return (response)
 
         elif sampling == "purposive_sampling":
+            print("purposive sampling running ")
             error = raw_data.get("error")
             unit = raw_data.get("unit")
-            new_yi = sum(Yi, [])
+            print("yi", Yi)
+            # new_yi = sum(Yi, [])
+            # print("new yi",new_yi)
+            print("unit", unit)
             purposiveSamplingInput = {
                 "insertedId": inserted_id,
-                "Yi": new_yi,
+                "Yi": Yi,
                 "unit": unit,
                 "e": float(error),
                 "N": int(population_size),
             }
 
             samples = dowellPurposiveSampling(purposiveSamplingInput)
-            id = get_event_id()  # Make sure you have a function for this
+            id = get_event_id()
             response = {
                 "samples": samples["sampleUnits"],
             }

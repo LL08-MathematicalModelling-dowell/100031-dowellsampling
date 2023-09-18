@@ -1,13 +1,16 @@
 from API.functions.sampleSize import dowellSampleSize
 
 def dowellPurposiveSampling(purposeiveSamplingInput):
-    N = purposeiveSamplingInput['N']
+    print("purposive sampling input" , purposeiveSamplingInput)
+    N = purposeiveSamplingInput('N')
+    print("N",N)
     e = purposeiveSamplingInput['e']
     n = dowellSampleSize(N, e)
     Yi = purposeiveSamplingInput['Yi']
     unit = purposeiveSamplingInput['unit']
     unit = unit.split(",")
-    print(n)
+    print("n", n)
+    print("unit",unit)
     sample_values = []
     unit_copy = unit[:]  # Make a copy of the unit list
     while len(sample_values) < n:
