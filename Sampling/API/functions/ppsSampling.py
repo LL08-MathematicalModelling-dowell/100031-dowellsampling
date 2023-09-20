@@ -7,7 +7,7 @@ import json
 def dowellppsSampling(ppsSamplingInputs):
     
     # population_units = ppsSamplingInputs['population_units']
-    population_units = ["A", "B", "C", "D", "E"]
+    population_units = ppsSamplingInputs["population_units"]
     population_size = ppsSamplingInputs['population_size']
     sample_size = dowellSampleSize(population_size, e=0.05)
     # size = [ppsSamplingInputs['size']]

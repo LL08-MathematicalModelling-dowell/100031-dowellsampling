@@ -163,14 +163,14 @@ def all_sampling(raw_data):
                 "allocationType": allocation_type,
                 "samplingType": sampling_type,
                 "replacement": replacement,
-                "Yi": Yi,
+                "Yi": get_YI_data(),
                 "populationSize": population_size,
             }
+            # print("stratified sampling input", stratifiedSamplingInput)
             samples = dowellStratifiedSampling(stratifiedSamplingInput)
-            id = get_event_id()  # Make sure you have a function for this
+            # id = get_event_id() 
             response = {
-                "event_id": id["event_id"],
-                "samples": samples["sampleUnits"],
+                "samples": samples,
             }
 
             return (response)
@@ -184,8 +184,8 @@ def all_sampling(raw_data):
             }
 
             samples, process_time = dowellQuotaSampling(**quotaSamplingInput)
-            id = get_event_id()
-            response = {"event_id": id["event_id"], "samples": samples}
+            # id = get_event_id()
+            response = { "samples": samples}
             return (response)
 
         elif sampling == "pps_sampling":
