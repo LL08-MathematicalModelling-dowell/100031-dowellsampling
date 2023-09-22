@@ -15,6 +15,7 @@ from API.functions.quotaSampling import dowellQuotaSampling
 from API.functions.ppsSampling import dowellppsSampling
 from API.functions.get_event_id import get_event_id
 from API.functions.API_Key_System import processApikey
+from API.functions.snowballSampling import dowellSnowballSampling
 
 def get_YI_data():
     header = {"content-type": "application/json"}
@@ -63,6 +64,18 @@ def get_YI_data_new():
         "Huckleberry",
     ]
     return hardcoded_data
+
+
+def snowball_sampling_data():
+    data = [
+    {"name": "John Doe", "connections": ["Jane Doe", "Peter Smith"]},
+    {"name": "Jane Doe", "connections": ["John Doe", "Susan Jones"]},
+    {"name": "Peter Smith", "connections": ["John Doe", "Mary Johnson"]},
+    {"name": "Susan Jones", "connections": ["Jane Doe", "David Williams"]},
+    {"name": "Mary Johnson", "connections": ["Peter Smith", "David Williams"]},
+    {"name": "David Williams", "connections": ["Mary Johnson", "Susan Jones"]},
+]
+    return data
 
 def all_sampling(raw_data):
     try:
@@ -185,7 +198,7 @@ def all_sampling(raw_data):
 
             samples, process_time = dowellQuotaSampling(**quotaSamplingInput)
             # id = get_event_id()
-            response = { "samples": samples}
+            response = {"samples": samples}
             return (response)
 
         elif sampling == "pps_sampling":
@@ -196,6 +209,19 @@ def all_sampling(raw_data):
             "size": size,
         }
             samples, process_time = dowellppsSampling(ppsSamplingInputs)
+            print(samples)
+            return ({"samples": samples})
+        elif sampling == "snowball_sampling":
+            error = raw_data.get("error")
+            reference = raw_data.get("reference")
+            sample_size = dowellSampleSize(int(population_size), float(error))
+            snowballSamplingInputs = {
+            "population_size": population_size,
+            "sample_size" : sample_size,
+            "population_units" : snowball_sampling_data(),
+            "reference" : reference
+        }
+            samples= dowellSnowballSampling(**snowballSamplingInputs)
             print(samples)
             return ({"samples": samples})
         else:
