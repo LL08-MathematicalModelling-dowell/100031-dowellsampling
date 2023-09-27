@@ -68,13 +68,15 @@ def get_YI_data_new():
 
 def snowball_sampling_data():
     data = [
-    {"name": "John Doe", "connections": ["Jane Doe", "Peter Smith"]},
-    {"name": "Jane Doe", "connections": ["John Doe", "Susan Jones"]},
-    {"name": "Peter Smith", "connections": ["John Doe", "Mary Johnson"]},
-    {"name": "Susan Jones", "connections": ["Jane Doe", "David Williams"]},
-    {"name": "Mary Johnson", "connections": ["Peter Smith", "David Williams"]},
-    {"name": "David Williams", "connections": ["Mary Johnson", "Susan Jones"]},
-]
+        {"name": "John Doe", "connections": ["Jane Doe", "Peter Smith"]},
+        {"name": "Jane Doe", "connections": ["John Doe", "Susan Jones"]},
+        {"name": "Peter Smith", "connections": ["John Doe", "Mary Johnson"]},
+        {"name": "Susan Jones", "connections": ["Jane Doe", "David Williams"]},
+        {"name": "Mary Johnson", "connections": ["Peter Smith", "David Williams"]},
+        {"name": "David Williams", "connections": ["Mary Johnson", "Susan Jones"]},
+    ]
+    return data
+
     return data
 
 def all_sampling(raw_data):
@@ -215,13 +217,15 @@ def all_sampling(raw_data):
             error = raw_data.get("error")
             reference = raw_data.get("reference")
             sample_size = dowellSampleSize(int(population_size), float(error))
+            population_units = snowball_sampling_data()
+            population_size = len(snowball_sampling_data())
             snowballSamplingInputs = {
             "population_size": population_size,
             "sample_size" : sample_size,
             "population_units" : snowball_sampling_data(),
             "reference" : reference
         }
-            samples= dowellSnowballSampling(**snowballSamplingInputs)
+            samples= dowellSnowballSampling( population_units, population_size,sample_size, reference)
             print(samples)
             return ({"samples": samples})
         else:
