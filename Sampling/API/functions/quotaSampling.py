@@ -3,19 +3,18 @@ from API.functions.purposiveSampling import dowellPurposiveSampling
 import time
 
 
-def dowellQuotaSampling(population_units, population_size, unit):
-    print("quota sampling input", population_units, population_size, unit)
+def dowellQuotaSampling(quota_body):
     process_time = 0
-    n = dowellSampleSize(population_units, e=0.05)
+    n = dowellSampleSize(quota_body.get("population_units"), e=0.05)
     quotas = []
     sample_units = []
     purposive_input = {}
-    Yi = population_units
+    Yi = quota_body.get("population_units")
     all_quotas = {}
     ni = {}
-    N = population_size
+    N = quota_body.get("population_size")
 
-    for i in range(len(Yi.get(0))):
+    for i in range(len(Yi[0])):
         quotas.append(i)
     k = len(quotas)
 
@@ -23,8 +22,9 @@ def dowellQuotaSampling(population_units, population_size, unit):
         tempList = []
         for j in range(len(Yi)):
             print(j)
-            tempList.append(Yi.get(j).get(i))
+            tempList.append(Yi[j])
         all_quotas[i] = tempList
+        print(all_quotas)
 
     if isinstance(n, int):
         for i in range(1, k+1):
@@ -33,10 +33,10 @@ def dowellQuotaSampling(population_units, population_size, unit):
             purposive_input["N"] = N
             purposive_input["e"] = 0.05
             purposive_input["Yi"] = Yi
-            purposive_input["unit"] = unit
+            purposive_input["unit"] = quota_body.get("population_units")
             sample = dowellPurposiveSampling(purposive_input)
             sample_units.append(sample)
 
     process_time = time.process_time()
 
-    return(sample_units, process_time)
+    return(sample_units)
