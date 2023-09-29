@@ -1,0 +1,32 @@
+.mobile {
+
+    display: block;
+    justify-content: center;
+    margin-top: 5em;
+    gap: 0.5em;
+    width: 70%;
+    margin-left: 10em
+}
+.info
+{
+    color:grey;
+    
+
+}
+.infoButton
+{
+    border-radius: 10em;
+
+}
+@media (max-width: 767px) {
+
+
+    .mobile {
+        margin-top: 5em;
+        margin-left: 1em;
+    }
+
+
+
+
+}
