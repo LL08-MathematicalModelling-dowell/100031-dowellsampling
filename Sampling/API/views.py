@@ -77,7 +77,6 @@ def snowball_sampling_data():
     ]
     return data
 
-    return data
 
 def all_sampling(raw_data):
     try:
@@ -198,7 +197,7 @@ def all_sampling(raw_data):
                 "unit": allocation_type,
             }
 
-            samples, process_time = dowellQuotaSampling(**quotaSamplingInput)
+            samples= dowellQuotaSampling(Yi,population_size,allocation_type)
             # id = get_event_id()
             response = {"samples": samples}
             return (response)
