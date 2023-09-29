@@ -15,6 +15,10 @@ const SampleSizeUpdated = () => {
     const [toggle,setToggle] = useState(false)
     const [buttonClicked,setButtonClicked] = useState(false)
     const [data,setData] = useState({});    
+    const[PopInfoClicked,setPopInfoClicked]=useState(false)
+    const[errorInfoClicked,setErrorInfoClicked]=useState(false)
+    const[deviationInfoClicked,setDeviationInfoClicked]=useState(false)
+    const [confidenceInfoClicked,setConfidenceInfoClicked]=useState(false)
     const handleSubmit =async () => 
 {
  
@@ -53,6 +57,7 @@ console.log(data)
     if(data.error)
     {
       alert("Check your inputs!")
+      setButtonClicked(false)
     }
     else
     {
@@ -88,20 +93,20 @@ console.log(data)
                 <>
                 {type === "finite" &&
                 <>
-                    <label className="form-label">Population Size:</label>
-      <input  class="form-control" placeholder='Enter N' onChange={e=>set_population_size(e.target.value)} type='number' />
+                    <label className="form-label">Population Size:<button className='infoButton' onClick={e=>setPopInfoClicked(!PopInfoClicked)}>?</button> {PopInfoClicked && <span className='info'>(The total number of individuals or elements in the entire population being studied. It is the entire group from which a  sample is drawn.)</span>}</label>
+      <input  class="form-control" placeholder='Enter N'  onChange={e=>set_population_size(e.target.value)} type='number' />
       </> }
         <div style={{display:"flex"}}> 
-         <label>Standard Deviation:</label>
+         <label>Standard Deviation: <button className='infoButton' onClick={e=>setDeviationInfoClicked(!deviationInfoClicked)}>?</button>{deviationInfoClicked && <span className='info'>(A measure of how much the values in a dataset differ from the mean. It indicates the spread or dispersion of the data points.)</span>}</label>
         <Checkbox  style={{marginTop:"-9px"}} onChange={e=>setSKnown(!sKnown)}/>
         </div>
             {
                 sKnown &&
                 <input class="form-control" placeholder='Enter Standard Deviation' onChange={e=>set_standard_deviation(e.target.value)} type='number'/>}
-      <label className="form-label">Error:</label>
+      <label className="form-label">Error:<button className='infoButton' onClick={e=>setErrorInfoClicked(!errorInfoClicked)}>?</button> {errorInfoClicked && <span className='info'>( The maximum allowable difference between the true population parameter and the estimated parameter based on the sample.  It reflects the level of precision desired in the study's results.)</span>}</label>
        <input type='number' className="form-control form-control-lg" placeholder='Error'  style={{width:"200px"}} onChange={e=>setError(e.target.value)}/>
          <div style={{display:"flex"}}> 
-         <label>Confidence Level:</label>
+         <label>Confidence Level:<button className='infoButton' onClick={e=>setConfidenceInfoClicked(!confidenceInfoClicked)}>?</button>{confidenceInfoClicked && <span className='info'>(A range within which the true population parameter is expected to lie with a certain level of confidence. It is  often expressed as a percentage.)</span>}</label>
         <Checkbox  style={{marginTop:"-9px"}} onChange={e=>set_conf(!conf)}/>
         </div>
        {
