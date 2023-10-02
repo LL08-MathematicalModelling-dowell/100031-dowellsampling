@@ -18,54 +18,55 @@ from API.functions.get_event_id import get_event_id
 from API.functions.API_Key_System import processApikey
 from API.functions.snowballSampling import dowellSnowballSampling
 
+
 def get_YI_data():
-	header = {"content-type": "application/json"}
-	data = json.dumps({"insertedId": "646d188771d319c4cf8e182a"})
-	url = "http://100061.pythonanywhere.com/function/"
-	response = requests.request("POST", url, data=data, headers=header).json()
-	data = response["finalOutput"]
-	return data
+    header = {"content-type": "application/json"}
+    data = json.dumps({"insertedId": "646d188771d319c4cf8e182a"})
+    url = "http://100061.pythonanywhere.com/function/"
+    response = requests.request("POST", url, data=data, headers=header).json()
+    data = response["finalOutput"]
+    return data
 
 
 def get_YI_data_new():
-	hardcoded_data = [
-		"Apple",
-		"Banana",
-		"Cherry",
-		"Date",
-		"Fig",
-		"Grape",
-		"Kiwi",
-		"Lemon",
-		"Mango",
-		"Orange",
-		"Peach",
-		"Pear",
-		"Quince",
-		"Raspberry",
-		"Strawberry",
-		"Watermelon",
-		"Blueberry",
-		"Pineapple",
-		"Pomegranate",
-		"Guava",
-		"Jackfruit",
-		"Apricot",
-		"Avocado",
-		"Blackberry",
-		"Blackcurrant",
-		"Coconut",
-		"Custard apple",
-		"Dragonfruit",
-		"Durian",
-		"Elderberry",
-		"Feijoa",
-		"Gooseberry",
-		"Grapefruit",
-		"Honeyberry",
-		"Huckleberry",
-	]
-	return hardcoded_data
+    hardcoded_data = [
+        "Apple",
+        "Banana",
+        "Cherry",
+        "Date",
+        "Fig",
+        "Grape",
+        "Kiwi",
+        "Lemon",
+        "Mango",
+        "Orange",
+        "Peach",
+        "Pear",
+        "Quince",
+        "Raspberry",
+        "Strawberry",
+        "Watermelon",
+        "Blueberry",
+        "Pineapple",
+        "Pomegranate",
+        "Guava",
+        "Jackfruit",
+        "Apricot",
+        "Avocado",
+        "Blackberry",
+        "Blackcurrant",
+        "Coconut",
+        "Custard apple",
+        "Dragonfruit",
+        "Durian",
+        "Elderberry",
+        "Feijoa",
+        "Gooseberry",
+        "Grapefruit",
+        "Honeyberry",
+        "Huckleberry",
+    ]
+    return hardcoded_data
 
 
 def snowball_sampling_data():
@@ -161,7 +162,7 @@ def all_sampling(raw_data):
             }
 
             samples = dowellClusterSampling(clusterSamplingInput)
-            # id = get_event_id() 
+            # id = get_event_id()
             response = {
                 "samples": samples,
             }
@@ -184,22 +185,22 @@ def all_sampling(raw_data):
             }
             # print("stratified sampling input", stratifiedSamplingInput)
             samples = dowellStratifiedSampling(stratifiedSamplingInput)
-            # id = get_event_id() 
+            # id = get_event_id()
             response = {
                 "samples": samples,
             }
 
             return (response)
 
-		elif sampling == "quota_sampling":
-			allocation_type = raw_data.get("allocationType")
-			quotaSamplingInput = {
-				"population_units": Yi,
-				"population_size": population_size,
-				"unit": allocation_type,
-			}
+        elif sampling == "quota_sampling":
+            allocation_type = raw_data.get("allocationType")
+            quotaSamplingInput = {
+                "population_units": Yi,
+                "population_size": population_size,
+                "unit": allocation_type,
+            }
 
-            samples= dowellQuotaSampling(Yi,population_size,allocation_type)
+            samples = dowellQuotaSampling(Yi, population_size, allocation_type)
             # id = get_event_id()
             response = {"samples": samples}
             return (response)
@@ -207,10 +208,10 @@ def all_sampling(raw_data):
         elif sampling == "pps_sampling":
             size = raw_data.get("size")
             ppsSamplingInputs = {
-            "population_units": Yi,
-            "population_size": population_size,
-            "size": size,
-        }
+                "population_units": Yi,
+                "population_size": population_size,
+                "size": size,
+            }
             samples, process_time = dowellppsSampling(ppsSamplingInputs)
             print(samples)
             return ({"samples": samples})
@@ -221,57 +222,58 @@ def all_sampling(raw_data):
             population_units = snowball_sampling_data()
             population_size = len(snowball_sampling_data())
             snowballSamplingInputs = {
-            "population_size": population_size,
-            "sample_size" : sample_size,
-            "population_units" : snowball_sampling_data(),
-            "reference" : reference
-        }
-            samples= dowellSnowballSampling( population_units, population_size,sample_size, reference)
+                "population_size": population_size,
+                "sample_size": sample_size,
+                "population_units": snowball_sampling_data(),
+                "reference": reference
+            }
+            samples = dowellSnowballSampling(population_units, population_size, sample_size, reference)
             print(samples)
             return ({"samples": samples})
         else:
             return ({
-                "message":f"{sampling} is not valid."
+                "message": f"{sampling} is not valid."
             })
     except Exception as e:
         return ({
-            "success":False,
+            "success": False,
             "message": str(e)
         })
-    
+
+
 @csrf_exempt
 def samplingAPI(request, api_key):
-	if (request.method == "POST"):
-		data = json.loads(request.body)
-		validate_api_count = processApikey(api_key, "DOWELL10011")
-		data_count = json.loads(validate_api_count)
-		if data_count['success']:
-			if data_count['total_credits'] >= 0:
-				output = all_sampling(data)
-				return JsonResponse(output, safe=False)
-			else:
-				return JsonResponse({
-					"success": False,
-					"message": data_count['message'],
-					"credits": data_count['total_credits']
-				})
-		else:
-			return JsonResponse({
-				"success": False,
-				"message": data_count['message']
-			})
-	else:
-		return HttpResponse("Method Not Allowed")
+    if (request.method == "POST"):
+        data = json.loads(request.body)
+        validate_api_count = processApikey(api_key, "DOWELL10011")
+        data_count = json.loads(validate_api_count)
+        if data_count['success']:
+            if data_count['total_credits'] >= 0:
+                output = all_sampling(data)
+                return JsonResponse(output, safe=False)
+            else:
+                return JsonResponse({
+                    "success": False,
+                    "message": data_count['message'],
+                    "credits": data_count['total_credits']
+                })
+        else:
+            return JsonResponse({
+                "success": False,
+                "message": data_count['message']
+            })
+    else:
+        return HttpResponse("Method Not Allowed")
 
 
 @csrf_exempt
 def samplingInternalAPI(request):
-	if (request.method == "POST"):
-		data = json.loads(request.body)
-		output = all_sampling(data)
-		return JsonResponse(output, safe=False)
-	else:
-		return HttpResponse("Method Not Allowed")
+    if (request.method == "POST"):
+        data = json.loads(request.body)
+        output = all_sampling(data)
+        return JsonResponse(output, safe=False)
+    else:
+        return HttpResponse("Method Not Allowed")
 
 
 
