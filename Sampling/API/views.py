@@ -18,9 +18,6 @@ from API.functions.get_event_id import get_event_id
 from API.functions.API_Key_System import processApikey
 from API.functions.snowballSampling import dowellSnowballSampling
 
-from API.functions.snowballSampling import dowellSnowballSampling
-
-
 def get_YI_data():
 	header = {"content-type": "application/json"}
 	data = json.dumps({"insertedId": "646d188771d319c4cf8e182a"})
@@ -72,127 +69,127 @@ def get_YI_data_new():
 
 
 def snowball_sampling_data():
-	data = [
-		{"name": "John Doe", "connections": ["Jane Doe", "Peter Smith"]},
-		{"name": "Jane Doe", "connections": ["John Doe", "Susan Jones"]},
-		{"name": "Peter Smith", "connections": ["John Doe", "Mary Johnson"]},
-		{"name": "Susan Jones", "connections": ["Jane Doe", "David Williams"]},
-		{"name": "Mary Johnson", "connections": ["Peter Smith", "David Williams"]},
-		{"name": "David Williams", "connections": ["Mary Johnson", "Susan Jones"]},
-	]
-	return data
+    data = [
+        {"name": "John Doe", "connections": ["Jane Doe", "Peter Smith"]},
+        {"name": "Jane Doe", "connections": ["John Doe", "Susan Jones"]},
+        {"name": "Peter Smith", "connections": ["John Doe", "Mary Johnson"]},
+        {"name": "Susan Jones", "connections": ["Jane Doe", "David Williams"]},
+        {"name": "Mary Johnson", "connections": ["Peter Smith", "David Williams"]},
+        {"name": "David Williams", "connections": ["Mary Johnson", "Susan Jones"]},
+    ]
+    return data
 
 
 def all_sampling(raw_data):
-	try:
-		inserted_id = raw_data.get("insertedId")
-		population_size = raw_data.get("populationSize")
-		Yi_data_type = raw_data.get("result")
-		sampling = raw_data.get("sampling")
-		if Yi_data_type == "api":
-			Yi = get_YI_data_new()
-		elif Yi_data_type == "upload":
-			excel_link = raw_data.get("link")
-			if excel_link:
-				df = pd.read_excel(excel_link)
-				list_of_lists = df.values.T.tolist()
-				Yi = list_of_lists
-			else:
-				return ({"error": "No link provided."})
-		else:
-			return ({"error": "api or link not selected"})
+    try:
+        inserted_id = raw_data.get("insertedId")
+        population_size = raw_data.get("populationSize")
+        Yi_data_type = raw_data.get("result")
+        sampling = raw_data.get("sampling")
+        if Yi_data_type == "api":
+            Yi = get_YI_data_new()
+        elif Yi_data_type == "upload":
+            excel_link = raw_data.get("link")
+            if excel_link:
+                df = pd.read_excel(excel_link)
+                list_of_lists = df.values.T.tolist()
+                Yi = list_of_lists
+            else:
+                return ({"error": "No link provided."})
+        else:
+            return ({"error": "api or link not selected"})
 
-		if sampling == "systematic_sampling":
-			systematicSamplingInput = {
-				"insertedId": inserted_id,
-				"population": Yi,
-				"population_size": population_size,
-			}
-			samples = dowellSystematicSampling(systematicSamplingInput)
-			response = {"samples": samples}
-			return (response)
+        if sampling == "systematic_sampling":
+            systematicSamplingInput = {
+                "insertedId": inserted_id,
+                "population": Yi,
+                "population_size": population_size,
+            }
+            samples = dowellSystematicSampling(systematicSamplingInput)
+            response = {"samples": samples}
+            return (response)
 
-		elif sampling == "simple_random_sampling":
-			error = raw_data.get("error")
-			method = raw_data.get("sampling_method")
-			n = dowellSampleSize(int(population_size), float(error))
-			simpleRandomSamplingInput = {
-				"insertedId": inserted_id,
-				"Yi": Yi,
-				"N": int(population_size),
-				"e": float(error),
-				"method": method,
-				"n": n,
-			}
-			samples = dowellSimpleRandomSampling(simpleRandomSamplingInput)
-			response = {"samples": samples["sampleUnits"]}
-			return (response)
+        elif sampling == "simple_random_sampling":
+            error = raw_data.get("error")
+            method = raw_data.get("sampling_method")
+            n = dowellSampleSize(int(population_size), float(error))
+            simpleRandomSamplingInput = {
+                "insertedId": inserted_id,
+                "Yi": Yi,
+                "N": int(population_size),
+                "e": float(error),
+                "method": method,
+                "n": n,
+            }
+            samples = dowellSimpleRandomSampling(simpleRandomSamplingInput)
+            response = {"samples": samples["sampleUnits"]}
+            return (response)
 
-		elif sampling == "purposive_sampling":
-			print("purposive sampling running ")
-			error = raw_data.get("error")
-			unit = raw_data.get("unit")
-			# print("yi", Yi)
-			# new_yi = sum(Yi, [])
-			# print("new yi",new_yi)
-			# print("unit", unit)
-			purposiveSamplingInput = {
-				"insertedId": inserted_id,
-				"Yi": Yi,
-				"unit": unit,
-				"error": float(error),
-				"populationSize": int(population_size),
-			}
+        elif sampling == "purposive_sampling":
+            print("purposive sampling running ")
+            error = raw_data.get("error")
+            unit = raw_data.get("unit")
+            # print("yi", Yi)
+            # new_yi = sum(Yi, [])
+            # print("new yi",new_yi)
+            # print("unit", unit)
+            purposiveSamplingInput = {
+                "insertedId": inserted_id,
+                "Yi": Yi,
+                "unit": unit,
+                "error": float(error),
+                "populationSize": int(population_size),
+            }
 
-			samples = dowellPurposiveSampling(purposiveSamplingInput)
-			# id = get_event_id()
-			response = {
-				"samples": samples,
-			}
-			return (response)
+            samples = dowellPurposiveSampling(purposiveSamplingInput)
+            # id = get_event_id()
+            response = {
+                "samples": samples,
+            }
+            return (response)
 
-		elif sampling == "cluster_sampling":
-			error = raw_data.get("error")
-			numberOfClusters = raw_data.get("numberOfClusters")
-			sizeOfCluster = raw_data.get("sizeOfCluster")
-			clusterSamplingInput = {
-				"Yi": Yi,
-				"e": float(error),
-				"N": int(population_size),
-				"M": int(numberOfClusters),
-				"hi": int(sizeOfCluster),
-			}
+        elif sampling == "cluster_sampling":
+            error = raw_data.get("error")
+            numberOfClusters = raw_data.get("numberOfClusters")
+            sizeOfCluster = raw_data.get("sizeOfCluster")
+            clusterSamplingInput = {
+                "Yi": Yi,
+                "e": float(error),
+                "N": int(population_size),
+                "M": int(numberOfClusters),
+                "hi": int(sizeOfCluster),
+            }
 
-			samples = dowellClusterSampling(clusterSamplingInput)
-			# id = get_event_id()
-			response = {
-				"samples": samples,
-			}
+            samples = dowellClusterSampling(clusterSamplingInput)
+            # id = get_event_id() 
+            response = {
+                "samples": samples,
+            }
 
-			return (response)
+            return (response)
 
-		elif sampling == "stratified_sampling":
-			allocation_type = raw_data.get("allocationType")
-			sampling_type = raw_data.get("samplingType")
-			replacement = raw_data.get("replacement")
-			error = raw_data.get("error")
-			stratifiedSamplingInput = {
-				"insertedId": inserted_id,
-				"e": error,
-				"allocationType": allocation_type,
-				"samplingType": sampling_type,
-				"replacement": replacement,
-				"Yi": get_YI_data(),
-				"populationSize": population_size,
-			}
-			# print("stratified sampling input", stratifiedSamplingInput)
-			samples = dowellStratifiedSampling(stratifiedSamplingInput)
-			# id = get_event_id()
-			response = {
-				"samples": samples,
-			}
+        elif sampling == "stratified_sampling":
+            allocation_type = raw_data.get("allocationType")
+            sampling_type = raw_data.get("samplingType")
+            replacement = raw_data.get("replacement")
+            error = raw_data.get("error")
+            stratifiedSamplingInput = {
+                "insertedId": inserted_id,
+                "e": error,
+                "allocationType": allocation_type,
+                "samplingType": sampling_type,
+                "replacement": replacement,
+                "Yi": get_YI_data(),
+                "populationSize": population_size,
+            }
+            # print("stratified sampling input", stratifiedSamplingInput)
+            samples = dowellStratifiedSampling(stratifiedSamplingInput)
+            # id = get_event_id() 
+            response = {
+                "samples": samples,
+            }
 
-			return (response)
+            return (response)
 
 		elif sampling == "quota_sampling":
 			allocation_type = raw_data.get("allocationType")
@@ -202,45 +199,46 @@ def all_sampling(raw_data):
 				"unit": allocation_type,
 			}
 
-			samples, process_time = dowellQuotaSampling(**quotaSamplingInput)
-			# id = get_event_id()
-			response = {"samples": samples}
-			return (response)
+            samples= dowellQuotaSampling(Yi,population_size,allocation_type)
+            # id = get_event_id()
+            response = {"samples": samples}
+            return (response)
 
-		elif sampling == "pps_sampling":
-			size = raw_data.get("size")
-			ppsSamplingInputs = {
-				"population_units": Yi,
-				"population_size": population_size,
-				"size": size,
-			}
-			samples, process_time = dowellppsSampling(ppsSamplingInputs)
-			print(samples)
-			return ({"samples": samples})
-		elif sampling == "snowball_sampling":
-			error = raw_data.get("error")
-			reference = raw_data.get("reference")
-			sample_size = dowellSampleSize(int(population_size), float(error))
-			snowballSamplingInputs = {
-				"population_size": population_size,
-				"sample_size": sample_size,
-				"population_units": snowball_sampling_data(),
-				"reference": reference
-			}
-			samples = dowellSnowballSampling(**snowballSamplingInputs)
-			print(samples)
-			return ({"samples": samples})
-		else:
-			return ({
-				"message": f"{sampling} is not valid."
-			})
-	except Exception as e:
-		return ({
-			"success": False,
-			"message": str(e)
-		})
-
-
+        elif sampling == "pps_sampling":
+            size = raw_data.get("size")
+            ppsSamplingInputs = {
+            "population_units": Yi,
+            "population_size": population_size,
+            "size": size,
+        }
+            samples, process_time = dowellppsSampling(ppsSamplingInputs)
+            print(samples)
+            return ({"samples": samples})
+        elif sampling == "snowball_sampling":
+            error = raw_data.get("error")
+            reference = raw_data.get("reference")
+            sample_size = dowellSampleSize(int(population_size), float(error))
+            population_units = snowball_sampling_data()
+            population_size = len(snowball_sampling_data())
+            snowballSamplingInputs = {
+            "population_size": population_size,
+            "sample_size" : sample_size,
+            "population_units" : snowball_sampling_data(),
+            "reference" : reference
+        }
+            samples= dowellSnowballSampling( population_units, population_size,sample_size, reference)
+            print(samples)
+            return ({"samples": samples})
+        else:
+            return ({
+                "message":f"{sampling} is not valid."
+            })
+    except Exception as e:
+        return ({
+            "success":False,
+            "message": str(e)
+        })
+    
 @csrf_exempt
 def samplingAPI(request, api_key):
 	if (request.method == "POST"):
