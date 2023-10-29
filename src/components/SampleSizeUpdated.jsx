@@ -21,11 +21,11 @@ const SampleSizeUpdated = () => {
 setButtonClicked(true)
 
 var data;
-if(error === 0 )
-{alert("Correct error field value")
-setButtonClicked(false)
-setToggle(false)}
-else{
+// if(error === 0 )
+// {alert("Correct error field value")
+// setButtonClicked(false)
+// setToggle(false)}
+// else{
 if(conf){
  data =
     {
@@ -78,7 +78,7 @@ console.log(data)
  
     // }
 
-}
+// }
 }
   return (
     <div>
