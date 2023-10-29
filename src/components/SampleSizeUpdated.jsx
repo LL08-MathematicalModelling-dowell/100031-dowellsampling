@@ -21,22 +21,27 @@ const SampleSizeUpdated = () => {
 setButtonClicked(true)
 
 var data;
+if(error === 0 )
+{alert("Correct error field value")
+setButtonClicked(false)
+setToggle(false)}
+else{
 if(conf){
  data =
     {
-    population_size,
-    error,
-    standard_deviation,
-    confidence_level 
+    population_size:type === 'inifinte' ? parseFloat(population_size) : null ,
+    error:parseFloat(error),
+    standard_deviation: parseFloat(standard_deviation),
+    confidence_level : parseFloat(confidence_level)
     }
   }
   else if(!conf)
   {
     data =
     {
-    population_size,
-    error,
-    standard_deviation,
+    population_size:type === 'inifinte' ? parseFloat(population_size) : null ,
+    error:parseFloat(error),
+    standard_deviation: parseFloat(standard_deviation),
     }
   }
 console.log(data)
@@ -50,9 +55,12 @@ console.log(data)
 
   .then((response) => response.json())
   .then((data) => {
+    console.log(data)
     if(data.error)
     {
       alert("Check your inputs!")
+      // setToggle(false)
+
     }
     else
     {
@@ -71,43 +79,86 @@ console.log(data)
     // }
 
 }
-
+}
   return (
     <div>
-        <div className='mobile'>
-         <h1 >Sample Size</h1>
-         <p>Type:</p>
-    <select className="form-control form-control-lg" onChange={e=>setType(e.target.value)}>
-        <option value="select">--select--</option>
-        <option value="finite">Finite Population</option>
-        <option value="infinite">Infinite Population</option>
-    </select>
-        <div style={{display:"flex",padding:"1em",justifyContent:"space-between",gap:"5em"}}>
-            <div style={{width:"50%",display:"grid",gap:"1em"}}>
-                { type !== "select" &&
-                <>
-                {type === "finite" &&
-                <>
-                    <label className="form-label">Population Size:</label>
-      <input  class="form-control" placeholder='Enter N' onChange={e=>set_population_size(e.target.value)} type='number' />
-      </> }
-        <div style={{display:"flex"}}> 
-         <label>Standard Deviation:</label>
-        <Checkbox  style={{marginTop:"-9px"}} onChange={e=>setSKnown(!sKnown)}/>
-        </div>
-            {
-                sKnown &&
-                <input class="form-control" placeholder='Enter Standard Deviation' onChange={e=>set_standard_deviation(e.target.value)} type='number'/>}
-      <label className="form-label">Error:</label>
-       <input type='number' className="form-control form-control-lg" placeholder='Error'  style={{width:"200px"}} onChange={e=>setError(e.target.value)}/>
-         <div style={{display:"flex"}}> 
-         <label>Confidence Level:</label>
-        <Checkbox  style={{marginTop:"-9px"}} onChange={e=>set_conf(!conf)}/>
-        </div>
-       {
+ <div className='mobile'>
+ <h3 style={{textAlign:"center",paddingTop:"1em"}}>Sample Size Experiment</h3>
+ <div style={{display:"flex",padding:"1em",justifyContent:"space-between",gap:"5em"}}>
+ <div>
+ <table>
+  <tr>
+    <td>Type</td>
+    <td>
+       <label>
+            <input
+              type="radio"
+              name="color"
+              value="infinite"
+              // checked={setType === 'infinite'}
+              onChange={e=>setType('infinite')}/>
+            Infinte 
+          </label>
+           <label>
+            <input
+              type="radio"
+              name="color"
+              value="finite"
+              // checked={setType === 'finite'}
+              onChange={e=>setType('finite')}
+            />
+            Finite
+          </label>
+    </td>
+  </tr>
+  {type === 'finite' && 
+  <tr>
+    <td>Population Size</td>
+    <td>
+      
+      <input  class="form-control" placeholder='Enter N'  onChange={e=>set_population_size(e.target.value)} type='number' />
+      
+    </td>
+  </tr>
+  }
+  <tr>
+    <td>Error</td>
+    <td>
+
+       <input type='number' required min={0} max={1} className="form-control" placeholder='Error'  onChange={e=>setError(e.target.value)}/>
+    </td>
+  </tr>
+  <tr>
+    <td>
+    <tr>
+      <td>
+        Standard Deviation 
+      </td>
+    <td >
+     <Checkbox  style={{}} onChange={e=>setSKnown(!sKnown)}/>
+    </td>
+    </tr>    
+    </td>
+    <td>       {sKnown && <>   <input min={0} max={1} class="form-control" placeholder='Enter Standard Deviation' onChange={e=>set_standard_deviation(e.target.value)} type='number'/> </>}</td>
+  </tr>
+  
+  <tr>
+
+  <td>
+  <tr>
+    <td>
+      Confidence Level
+    </td>
+<td >
+   <Checkbox  style={{marginLeft:'0.9em'}} onChange={e=>set_conf(!conf)}/>
+</td>
+</tr>
+  </td>
+  <td>
+    {
         conf && <>
-        <label className="form-label">Confidence Level:</label>
-       <select className="form-control form-control-lg" onChange={(e)=>set_confidence_level(e.target.value)}>
+       
+       <select className="form-control " onChange={(e)=>set_confidence_level(e.target.value)}>
         <option disabled>--select--</option>
         <option>0.90</option>
         <option>0.95</option>
@@ -115,15 +166,22 @@ console.log(data)
         </select>
         </>
         }
-        <button onClick={handleSubmit} className="btn btn-primary" disabled={buttonClicked} >Submit</button>
-  </>
-  }     
-       </div>
-            <div style={{width:"50%"}}>
-                {toggle  && 
+  </td>
+  </tr>
+  <tr>
+    <button onClick={handleSubmit} className="btn btn-primary" disabled={buttonClicked} >Submit</button>
+  </tr>
+  
+  
+</table>
+</div>
+<div>
+            {!toggle  ? 
+<h3 >Response will appear here<span style={{color:"red"}}>*</span></h3>
+:
  
 <>
-                    <h2 style={{marginTop:"2em",display:"grid",justifyContent:"center"}}>Response</h2>
+                    <h2>Response</h2>
   <Table className="styled-table">
           <TableHead>
             <TableRow >
@@ -144,8 +202,6 @@ console.log(data)
           </Table>
 </>
 }
-            </div>
-        </div>
         {!toggle && buttonClicked &&
  
      <div style={{marginLeft:"30%",justifyContent:"center"}}> 
@@ -163,10 +219,12 @@ console.log(data)
     <>
         <button onClick={e=>window.location.reload("/")} className="btn btn-primary"  >Try Again</button>
     </>
+    
     }
-        </div>
-      
     </div>
+    </div>
+    </div>
+  </div>
   )
 }
 

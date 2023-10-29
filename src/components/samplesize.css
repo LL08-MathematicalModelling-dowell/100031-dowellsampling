@@ -2,10 +2,14 @@
 
     display: block;
     justify-content: center;
-    margin-top: 5em;
-    gap: 0.5em;
-    width: 70%;
-    margin-left: 10em
+    /* margin-top: 15em; */
+    /* gap: 0.5em; */
+    width: 50%;
+    background-color: antiquewhite;
+    border-radius: 10px;
+    margin:  10em auto ;
+    /* align-items: center; */
+    /* margin-left: 16em */
 }
 .info
 {
@@ -26,7 +30,24 @@
         margin-left: 1em;
     }
 
-
+table,
+th,
+td {
+    border: 1px solid black;
+}
 
 
 }
+
+ .centered-div {
+     width: 200px;
+     /* Set the width of the div */
+     height: 200px;
+     /* Set the height of the div */
+     background-color: #e0e0e0;
+     /* Add a background color for visibility */
+     position: absolute;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%, -50%);
+ }
