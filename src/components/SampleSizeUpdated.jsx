@@ -1,35 +1,47 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import ClipLoader from "react-spinners/ClipLoader";
 import { Checkbox } from '@mui/material'
 import { useState } from 'react'
 import "./samplesize.css"
 import { Table, TableHead, TableBody, TableRow, TableCell } from '@mui/material';
 const SampleSizeUpdated = () => {
-    const [type,setType] = useState("select")
+    const [type,setType] = useState("infinite")
     const [sKnown,setSKnown] = useState(false)
     const [standard_deviation,set_standard_deviation]=useState(null)
     const [conf,set_conf]=useState(false)
     const [population_size,set_population_size] = useState(null)
-    const [error,setError]=useState(0)
+    const [error,setError]=useState(-1)
     const [confidence_level,set_confidence_level]=useState(0.90)
     const [toggle,setToggle] = useState(false)
     const [buttonClicked,setButtonClicked] = useState(false)
     const [data,setData] = useState({});    
+    const [disableButton,setDisableButton] = useState(true)
+
     const handleSubmit =async () => 
 {
- 
-setButtonClicked(true)
 
 var data;
-// if(error === 0 )
-// {alert("Correct error field value")
-// setButtonClicked(false)
-// setToggle(false)}
-// else{
+if(error < 0 && error > 1 )
+{
+  alert("Correct Error Inputs!")
+}
+else if(standard_deviation < 0 && standard_deviation > 1 )
+{
+  alert("Correct Standard Deviation Inputs!")
+}
+// else if(error === -1)
+// {
+//   setDisableButton(true)
+// }
+else
+{
+  setDisableButton(true)
+setButtonClicked(true)
+
 if(conf){
  data =
     {
-    population_size:type === 'inifinte' ? parseFloat(population_size) : null ,
+    population_size:type === 'finite' ? parseFloat(population_size) : null ,
     error:parseFloat(error),
     standard_deviation: parseFloat(standard_deviation),
     confidence_level : parseFloat(confidence_level)
@@ -39,7 +51,7 @@ if(conf){
   {
     data =
     {
-    population_size:type === 'inifinte' ? parseFloat(population_size) : null ,
+    population_size:type === 'finite' ? parseFloat(population_size) : null ,
     error:parseFloat(error),
     standard_deviation: parseFloat(standard_deviation),
     }
@@ -68,6 +80,7 @@ console.log(data)
       setData(data)
       setToggle(true)
       setButtonClicked(false)
+      setDisableButton(false)
     }
     //   console.log(data);
     
@@ -78,8 +91,28 @@ console.log(data)
  
     // }
 
-// }
 }
+}
+ const handleError=(e)=>{
+  const es = e.target.value
+  if(es < 1 && es >0){ 
+  setError(e.target.value)
+  setDisableButton(false)
+  }
+  else   if(es < 0 || es > 1){ 
+  setDisableButton(true)
+  }
+ }
+ const handleStandardDeviation=(e)=>{
+  const es = e.target.value
+  if(es < 1 && es >0){ 
+  set_standard_deviation(e.target.value)
+  setDisableButton(false)
+  }
+  else   if(es < 0 || es > 1){ 
+  setDisableButton(true)
+  }
+ }
   return (
     <div>
  <div className='mobile'>
@@ -90,42 +123,34 @@ console.log(data)
   <tr>
     <td>Type</td>
     <td>
-       <label>
-            <input
-              type="radio"
-              name="color"
-              value="infinite"
-              // checked={setType === 'infinite'}
-              onChange={e=>setType('infinite')}/>
-            Infinte 
-          </label>
-           <label>
-            <input
-              type="radio"
-              name="color"
-              value="finite"
-              // checked={setType === 'finite'}
-              onChange={e=>setType('finite')}
-            />
-            Finite
-          </label>
+            <select className="form-control"
+        id="color"
+        name="color"
+        // value={type}
+        onChange={e=>setType(e.target.value)}
+      >
+
+        <option disabled>--select--</option>
+        <option value="infinite">Infinite</option>
+        <option value="finite">Finite</option>
+      </select>
     </td>
   </tr>
-  {type === 'finite' && 
+  {/* {type === 'finite' &&  */}
   <tr>
     <td>Population Size</td>
     <td>
       
-      <input  class="form-control" placeholder='Enter N'  onChange={e=>set_population_size(e.target.value)} type='number' />
+      <input disabled={type === "infinite"}  className="form-control" placeholder='Enter N'  onChange={e=>set_population_size(e.target.value)} type='number' />
       
     </td>
   </tr>
-  }
+  {/* } */}
   <tr>
     <td>Error</td>
     <td>
 
-       <input type='number' required min={0} max={1} className="form-control" placeholder='Error'  onChange={e=>setError(e.target.value)}/>
+       <input type='number' required min='0' max="1" className="form-control" placeholder='Error'  onChange={e=>handleError(e)}/>
     </td>
   </tr>
   <tr>
@@ -139,7 +164,7 @@ console.log(data)
     </td>
     </tr>    
     </td>
-    <td>       {sKnown && <>   <input min={0} max={1} class="form-control" placeholder='Enter Standard Deviation' onChange={e=>set_standard_deviation(e.target.value)} type='number'/> </>}</td>
+    <td>       {sKnown && <>   <input min={0} max={1} className="form-control" placeholder='Enter Standard Deviation' onChange={e=>handleStandardDeviation(e)} type='number'/> </>}</td>
   </tr>
   
   <tr>
@@ -169,7 +194,7 @@ console.log(data)
   </td>
   </tr>
   <tr>
-    <button onClick={handleSubmit} className="btn btn-primary" disabled={buttonClicked} >Submit</button>
+    <button onClick={handleSubmit} className="btn btn-primary" disabled={disableButton} >Submit</button>
   </tr>
   
   
@@ -215,12 +240,7 @@ console.log(data)
       </div>
  
  }
- {toggle &&
-    <>
-        <button onClick={e=>window.location.reload("/")} className="btn btn-primary"  >Try Again</button>
-    </>
-    
-    }
+
     </div>
     </div>
     </div>
