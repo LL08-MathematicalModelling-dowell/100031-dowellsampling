@@ -4,6 +4,7 @@ import { Checkbox } from '@mui/material'
 import { useState } from 'react'
 import "./samplesize.css"
 import { Table, TableHead, TableBody, TableRow, TableCell } from '@mui/material';
+import Popup from 'reactjs-popup';
 const SampleSizeUpdated = () => {
     const [type,setType] = useState("infinite")
     const [sKnown,setSKnown] = useState(false)
@@ -120,6 +121,8 @@ console.log(data)
     <div>
  <div className='mobile'>
  <h3 style={{textAlign:"center",paddingTop:"1em"}}>Sample Size Experiment</h3>
+  
+            
  <div style={{display:"flex",padding:"1em",justifyContent:"space-between",gap:"5em"}}>
  <div>
  <table>
@@ -141,7 +144,12 @@ console.log(data)
   </tr>
   {/* {type === 'finite' &&  */}
   <tr>
-    <td>Population Size <button className='infoButton' onClick={e=>setPopInfoClicked(!PopInfoClicked)}>?</button> {PopInfoClicked && <span className='info'>(The total number of individuals or elements in the entire population being studied. It is the entire group from which a  sample is drawn.)</span>}</td>
+    <td>Population Size <Popup trigger=
+                {<button className='infoButton'>?</button>}
+                position="right center" >
+                <div style={{width:"50%",background:"white",borderRadius:"1em",padding:"0.5em"}}>The total number of individuals or elements in the entire population being studied. It is the entire group from which a  sample is drawn.</div>
+                
+            </Popup></td>
     <td>
       
       <input disabled={type === "infinite"}  className="form-control" placeholder='Enter N'  onChange={e=>set_population_size(e.target.value)} type='number' />
@@ -150,7 +158,12 @@ console.log(data)
   </tr>
   {/* } */}
   <tr>
-    <td>Error <button className='infoButton' onClick={e=>setErrorInfoClicked(!errorInfoClicked)}>?</button> {errorInfoClicked && <span className='info'>(Imagine you're conducting a survey, and you want to know what percentage of people in your town like ice cream. You survey 500 people and find that 60% of them like ice cream.However, you know that not everyone in your town was surveyed. So, there's a chance that if you surveyed everyone, the percentage might be slightly different.The margin of error is like a safety net around your survey result. It tells you how much your result might vary if you surveyed everyone. If your margin of error is ±5%, it means that the true percentage of people who like ice cream could be as low as 55% or as high as 65%, with 95% confidence.In simple terms, a confidence interval gives you a range of values where you think the true answer lies, and the margin of error tells you how much that range might wiggle if you talked to more people or collected more data. It's a way of being honest about the uncertainty in your estimates.)</span>}</td>
+    <td>Error <Popup trigger=
+                {<button className='infoButton'>?</button>}
+                position="right center" >
+                <div style={{width:"50%",background:"white",borderRadius:"1em",padding:"0.5em"}}>Imagine you're conducting a survey, and you want to know what percentage of people in your town like ice cream. You survey 500 people and find that 60% of them like ice cream.However, you know that not everyone in your town was surveyed. So, there's a chance that if you surveyed everyone, the percentage might be slightly different.The margin of error is like a safety net around your survey result. It tells you how much your result might vary if you surveyed everyone. If your margin of error is ±5%, it means that the true percentage of people who like ice cream could be as low as 55% or as high as 65%, with 95% confidence.In simple terms, a confidence interval gives you a range of values where you think the true answer lies, and the margin of error tells you how much that range might wiggle if you talked to more people or collected more data. It's a way of being honest about the uncertainty in your estimates.</div>
+                
+            </Popup></td>
     <td>
         
        <input type='number' required min='0' max="1" className="form-control" placeholder='Error'  onChange={e=>handleError(e)}/>
@@ -162,7 +175,12 @@ console.log(data)
     <td>
     <tr>
       <td>
-        Standard Deviation <button className='infoButton' onClick={e=>setDeviationInfoClicked(!deviationInfoClicked)}>?</button>{deviationInfoClicked && <span className='info'>(A measure of how much the values in a dataset differ from the mean. It indicates the spread or dispersion of the data points.)</span>}
+        Standard Deviation <Popup trigger=
+                {<button className='infoButton'>?</button>}
+                position="right center" >
+                <div style={{width:"50%",background:"white",borderRadius:"1em",padding:"0.5em"}}>A measure of how much the values in a dataset differ from the mean. It indicates the spread or dispersion of the data points.</div>
+                
+            </Popup>
       </td>
     <td >
      <Checkbox  style={{}} onChange={e=>setSKnown(!sKnown)}/>
@@ -178,7 +196,12 @@ console.log(data)
   <td>
   <tr>
     <td>
-      Confidence Level <button className='infoButton' onClick={e=>setConfidenceInfoClicked(!confidenceInfoClicked)}>?</button>{confidenceInfoClicked && <span className='info'>(Imagine you're trying to estimate something, like the average height of all students in your school. You can't measure every single student's height; that would take too much time and effort. So, you decide to measure the heights of a sample, say 100 students.Now, here's where the confidence interval comes in. Instead of giving a single number as your estimate (e.g., the average height is 160 cm), you give a range of values (e.g., 155 cm to 165 cm) along with a level of confidence (e.g., 95%).What this means is that you're saying, "I'm 95% confident that the real average height of all students falls between 155 cm and 165 cm based on my sample." In other words, you acknowledge that your estimate might not be perfect, but you're pretty sure it's in that range.)</span>}
+      Confidence Level <Popup trigger=
+                {<button className='infoButton'>?</button>}
+                position="right center" >
+                <div style={{width:"50%",background:"white",borderRadius:"1em",padding:"0.5em"}}>Imagine you're trying to estimate something, like the average height of all students in your school. You can't measure every single student's height; that would take too much time and effort. So, you decide to measure the heights of a sample, say 100 students.Now, here's where the confidence interval comes in. Instead of giving a single number as your estimate (e.g., the average height is 160 cm), you give a range of values (e.g., 155 cm to 165 cm) along with a level of confidence (e.g., 95%).What this means is that you're saying, "I'm 95% confident that the real average height of all students falls between 155 cm and 165 cm based on my sample." In other words, you acknowledge that your estimate might not be perfect, but you're pretty sure it's in that range.</div>
+                
+            </Popup>
     </td>
 <td >
    <Checkbox  style={{marginLeft:'0.9em'}} onChange={e=>set_conf(!conf)}/>
