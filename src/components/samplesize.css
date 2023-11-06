@@ -4,8 +4,8 @@
     justify-content: center;
     /* margin-top: 15em; */
     /* gap: 0.5em; */
-    width: 50%;
-    background-color: antiquewhite;
+    width: 90%;
+    background-color: rgb(229, 229, 229);
     border-radius: 10px;
     margin:  10em auto ;
     /* align-items: center; */
@@ -29,7 +29,7 @@
         /* margin-top:10em auto; */
 
         /* margin-left: 1em; */
-        width: 100%;
+        width: 80%;
     }
 
 table,

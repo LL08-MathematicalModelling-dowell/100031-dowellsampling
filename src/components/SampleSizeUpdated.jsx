@@ -12,15 +12,14 @@ const SampleSizeUpdated = () => {
     const [conf,set_conf]=useState(false)
     const [population_size,set_population_size] = useState(null)
     const [error,setError]=useState(-1)
-    const [confidence_level,set_confidence_level]=useState(0.90)
+    const [confidence_level,set_confidence_level]=useState(null)
     const [toggle,setToggle] = useState(false)
     const [buttonClicked,setButtonClicked] = useState(false)
     const [data,setData] = useState({});    
     const [disableButton,setDisableButton] = useState(true)
- const[PopInfoClicked,setPopInfoClicked]=useState(false)
-    const[errorInfoClicked,setErrorInfoClicked]=useState(false)
-    const[deviationInfoClicked,setDeviationInfoClicked]=useState(false)
-    const [confidenceInfoClicked,setConfidenceInfoClicked]=useState(false)
+    const [valueExceedErr,setValueExceedErr] = useState(false)
+    const [valueExceedSD,setValueExceedSD] = useState(false)
+    const [valueExceedCL,setValueExceedCL] = useState(false)
     const handleSubmit =async () => 
 {
 
@@ -97,25 +96,45 @@ console.log(data)
 
 }
 }
- const handleError=(e)=>{
+
+const handleError =(e)=>{
   const es = e.target.value
-  if(es < 1 && es >0){ 
+  if(es <= 1 && es >= 0){ 
+    setValueExceedErr(false)
   setError(e.target.value)
   setDisableButton(false)
   }
-  else   if(es < 0 || es > 1){ 
-  setDisableButton(true)
+  else   if(es <= 0 || es >= 1){ 
+    setValueExceedErr(true)
+    setDisableButton(true)
   }
- }
+
+}
  const handleStandardDeviation=(e)=>{
   const es = e.target.value
   if(es < 1 && es >0){ 
+    setValueExceedSD(false)
   set_standard_deviation(e.target.value)
   setDisableButton(false)
   }
-  else   if(es < 0 || es > 1){ 
+  else   if(es <= 0 || es >= 1){ 
   setDisableButton(true)
+  setValueExceedSD(true)
   }
+
+ }
+ const handleConfidenceLevel =(e)=>{
+const es = e.target.value
+  if(es <= 1 && es >= 0){ 
+    setValueExceedCL(false)
+  set_confidence_level(e.target.value)
+  setDisableButton(false)
+  }
+  else   if(es <= 0 || es >= 1){ 
+  setDisableButton(true)
+  setValueExceedCL(true)
+  }
+
  }
   return (
     <div>
@@ -123,9 +142,9 @@ console.log(data)
  <h3 style={{textAlign:"center",paddingTop:"1em"}}>Sample Size Experiment</h3>
   
             
- <div style={{display:"flex",padding:"1em",justifyContent:"space-between",gap:"5em"}}>
+ <div style={{display:"flex",padding:"1em",justifyContent:"space-between",gap:"1em"}}>
  <div>
- <table>
+ <table  style={{minWidth:"19rem"}}>
   <tr>
     <td>Type</td>
     <td>
@@ -147,7 +166,7 @@ console.log(data)
     <td>Population Size <Popup trigger=
                 {<button className='infoButton'>?</button>}
                 position="right center" >
-                <div style={{width:"50%",background:"white",borderRadius:"1em",padding:"0.5em"}}>The total number of individuals or elements in the entire population being studied. It is the entire group from which a  sample is drawn.</div>
+                <div style={{width:"50%",background:"white",borderRadius:"1em",padding:"0.5em"}}>The population size refers to the total number of individuals, items, or data points in the entire group or set under study. It is denoted as "N" and is a crucial parameter for sampling methods and calculations.</div>
                 
             </Popup></td>
     <td>
@@ -161,15 +180,16 @@ console.log(data)
     <td>Error <Popup trigger=
                 {<button className='infoButton'>?</button>}
                 position="right center" >
-                <div style={{width:"50%",background:"white",borderRadius:"1em",padding:"0.5em"}}>Imagine you're conducting a survey, and you want to know what percentage of people in your town like ice cream. You survey 500 people and find that 60% of them like ice cream.However, you know that not everyone in your town was surveyed. So, there's a chance that if you surveyed everyone, the percentage might be slightly different.The margin of error is like a safety net around your survey result. It tells you how much your result might vary if you surveyed everyone. If your margin of error is ±5%, it means that the true percentage of people who like ice cream could be as low as 55% or as high as 65%, with 95% confidence.In simple terms, a confidence interval gives you a range of values where you think the true answer lies, and the margin of error tells you how much that range might wiggle if you talked to more people or collected more data. It's a way of being honest about the uncertainty in your estimates.</div>
+                <div style={{width:"50%",background:"white",borderRadius:"1em",padding:"0.5em"}}> Error in statistics represents the difference between an estimated or observed value and the true or actual value. It quantifies the inaccuracy in a measurement or estimation and can be positive (overestimation) or negative (underestimation).</div>
                 
             </Popup></td>
     <td>
         
-       <input type='number' required min='0' max="1" className="form-control" placeholder='Error'  onChange={e=>handleError(e)}/>
+       <input type='number' required min='0' max="1" className="form-control" placeholder='Range 0 to 1'  onChange={e=>handleError(e)}/>
+
 
     </td>
-    <td><p>(0.1 - 0.9)<span style={{color:"red"}}>*</span></p></td>
+    {valueExceedErr && <td><p>Range (0 - 1)<span style={{color:"red"}}>*</span></p></td>}
   </tr>
   <tr>
     <td>
@@ -178,7 +198,7 @@ console.log(data)
         Standard Deviation <Popup trigger=
                 {<button className='infoButton'>?</button>}
                 position="right center" >
-                <div style={{width:"50%",background:"white",borderRadius:"1em",padding:"0.5em"}}>A measure of how much the values in a dataset differ from the mean. It indicates the spread or dispersion of the data points.</div>
+                <div style={{width:"50%",background:"white",borderRadius:"1em",padding:"0.5em"}}>The standard deviation is a measure of the spread or variability of data in a dataset. It quantifies how individual data points deviate from the mean (average) of the dataset. A lower standard deviation indicates less variability, while a higher one suggests greater variability.</div>
                 
             </Popup>
       </td>
@@ -187,8 +207,8 @@ console.log(data)
     </td>
     </tr>    
     </td>
-    <td>       {sKnown && <>   <input min={0} max={1} className="form-control" placeholder='Enter Standard Deviation' onChange={e=>handleStandardDeviation(e)} type='number'/> </>}</td>
-   <td>{sKnown && <p>(0.1 - 0.9)</p>}</td>
+    <td>       {sKnown && <>   <input min={0} max={1} className="form-control" placeholder='Range 0 to 1' onChange={e=>handleStandardDeviation(e)} type='number'/> </>}</td>
+  {valueExceedSD && <td><p>Range (0 - 1)<span style={{color:"red"}}>*</span></p></td>}
   </tr>
   
   <tr>
@@ -199,7 +219,7 @@ console.log(data)
       Confidence Level <Popup trigger=
                 {<button className='infoButton'>?</button>}
                 position="right center" >
-                <div style={{width:"50%",background:"white",borderRadius:"1em",padding:"0.5em"}}>Imagine you're trying to estimate something, like the average height of all students in your school. You can't measure every single student's height; that would take too much time and effort. So, you decide to measure the heights of a sample, say 100 students.Now, here's where the confidence interval comes in. Instead of giving a single number as your estimate (e.g., the average height is 160 cm), you give a range of values (e.g., 155 cm to 165 cm) along with a level of confidence (e.g., 95%).What this means is that you're saying, "I'm 95% confident that the real average height of all students falls between 155 cm and 165 cm based on my sample." In other words, you acknowledge that your estimate might not be perfect, but you're pretty sure it's in that range.</div>
+                <div style={{width:"50%",background:"white",borderRadius:"1em",padding:"0.5em"}}>A confidence interval is a range of values that is calculated from a sample using a formula that incorporates the standard error of the sample mean and a chosen level of confidence. It provides a range within which we can reasonably expect the true population parameter to fall, given the sample data and the chosen confidence level.</div>
                 
             </Popup>
     </td>
@@ -211,16 +231,17 @@ console.log(data)
   <td>
     {
         conf && <>
-       
-       <select className="form-control " onChange={(e)=>set_confidence_level(e.target.value)}>
+         <input type='number' required min='0' max="1" className="form-control" placeholder='Range 0 to 1'  onChange={(e)=>handleConfidenceLevel(e)}/>
+       {/* <select className="form-control " onChange={(e)=>set_confidence_level(e.target.value)}>
         <option disabled>--select--</option>
         <option>0.90</option>
         <option>0.95</option>
         <option>0.99</option>
-        </select>
+        </select> */}
         </>
         }
   </td>
+  {valueExceedCL && <td><p>Range (0 - 1)<span style={{color:"red"}}>*</span></p></td>}
   </tr>
   <tr>
     <button onClick={handleSubmit} className="btn btn-primary" disabled={disableButton} >Submit</button>
@@ -236,7 +257,7 @@ console.log(data)
  
 <>
                     <h2>Response</h2>
-  <Table className="styled-table">
+  <Table className="styled-table" style={{maxWidth:"1px"}}>
           <TableHead>
             <TableRow >
               <TableCell style={{fontWeight:"bolder"}}>Sample Size</TableCell>
@@ -250,7 +271,6 @@ console.log(data)
               <TableCell>{data.sample_size}</TableCell>
               <TableCell>{data.process_time}</TableCell>
               <TableCell>{data.method_used}</TableCell>
-              {/* Add more TableCell elements for additional columns */}
             </TableRow>
           </TableBody>
           </Table>
