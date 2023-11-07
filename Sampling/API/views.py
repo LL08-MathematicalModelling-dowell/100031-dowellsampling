@@ -92,7 +92,9 @@ def all_sampling(raw_data):
         elif Yi_data_type == "upload":
             excel_link = raw_data.get("link")
             if excel_link:
-                df = pd.read_excel(excel_link)
+                print("running excel link")
+                df = pd.read_csv(excel_link)
+                print(df)
                 list_of_lists = df.values.T.tolist()
                 Yi = list_of_lists
             else:
