@@ -204,7 +204,7 @@ def all_sampling(raw_data):
                 "allocationType": allocation_type,
                 "samplingType": sampling_type,
                 "replacement": replacement,
-                "Yi": get_YI_data(),
+                "Yi": Yi,
                 "populationSize": population_size,
             }
             # print("stratified sampling input", stratifiedSamplingInput)
