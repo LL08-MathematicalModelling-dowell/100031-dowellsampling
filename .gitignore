@@ -5,3 +5,4 @@ __py_cache__/
 **/Sampling/API/migrations/__pycache__
 /thunder-tests
 thunder-tests
+/test.py

@@ -19,6 +19,28 @@ from API.functions.API_Key_System import processApikey
 from API.functions.snowballSampling import dowellSnowballSampling
 
 
+def dowellConnection(command,field,update_field):
+    url = "http://uxlivinglab.pythonanywhere.com"
+    payload = json.dumps({
+        "cluster": "dowellfunctions",
+        "database": "dowellfunctions",
+        "collection": "permutations",
+        "document": "permutations",
+        "team_member_ID": "1195001",
+        "function_ID": "ABCDE",
+        "command": command,
+        "field": field,
+        "update_field": update_field,
+        "platform": "bangalore"
+        })
+
+    headers = {
+        'Content-Type': 'application/json'
+    }
+    response = requests.request("POST", url, headers=headers, data=payload).json()
+    data = json.loads(response)
+    return data
+
 def get_YI_data():
     header = {"content-type": "application/json"}
     data = json.dumps({"insertedId": "646d188771d319c4cf8e182a"})
@@ -89,7 +111,7 @@ def all_sampling(raw_data):
         sampling = raw_data.get("sampling")
         if Yi_data_type == "api":
             Yi = get_YI_data_new()
-        elif Yi_data_type == "upload":
+        elif Yi_data_type == "link":
             excel_link = raw_data.get("link")
             if excel_link:
                 print("running excel link")
