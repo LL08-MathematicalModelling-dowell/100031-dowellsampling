@@ -99,7 +99,7 @@ console.log(data)
 
 const handleError =(e)=>{
   const es = e.target.value
-  if(es <= 1 && es >= 0){ 
+  if(es < 1 && es > 0){ 
     setValueExceedErr(false)
   setError(e.target.value)
   setDisableButton(false)
@@ -185,7 +185,7 @@ const es = e.target.value
             </Popup></td>
     <td>
         
-       <input type='number' required min='0' max="1" className="form-control" placeholder='Range 0 to 1'  onChange={e=>handleError(e)}/>
+       <input type='number' required min='0' max="1" step=".1" className="form-control" placeholder='Range 0 to 1'  onChange={e=>handleError(e)}/>
 
 
     </td>
@@ -207,7 +207,7 @@ const es = e.target.value
     </td>
     </tr>    
     </td>
-    <td>       {sKnown && <>   <input min={0} max={1} className="form-control" placeholder='Range 0 to 1' onChange={e=>handleStandardDeviation(e)} type='number'/> </>}</td>
+    <td>       {sKnown && <>   <input min={0} max={1} step=".1" className="form-control" placeholder='Range 0 to 1' onChange={e=>handleStandardDeviation(e)} type='number'/> </>}</td>
   {valueExceedSD && <td><p>Range (0 - 1)<span style={{color:"red"}}>*</span></p></td>}
   </tr>
   
@@ -231,7 +231,7 @@ const es = e.target.value
   <td>
     {
         conf && <>
-         <input type='number' required min='0' max="1" className="form-control" placeholder='Range 0 to 100'  onChange={(e)=>handleConfidenceLevel(e)}/>
+         <input type='number' required min='0' max="100"  className="form-control" placeholder='Range 0 to 100'  onChange={(e)=>handleConfidenceLevel(e)}/>
        {/* <select className="form-control " onChange={(e)=>set_confidence_level(e.target.value)}>
         <option disabled>--select--</option>
         <option>0.90</option>
