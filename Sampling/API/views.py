@@ -50,45 +50,13 @@ def get_YI_data():
     return data
 
 
-def get_YI_data_new():
-    hardcoded_data = [
-        "Apple",
-        "Banana",
-        "Cherry",
-        "Date",
-        "Fig",
-        "Grape",
-        "Kiwi",
-        "Lemon",
-        "Mango",
-        "Orange",
-        "Peach",
-        "Pear",
-        "Quince",
-        "Raspberry",
-        "Strawberry",
-        "Watermelon",
-        "Blueberry",
-        "Pineapple",
-        "Pomegranate",
-        "Guava",
-        "Jackfruit",
-        "Apricot",
-        "Avocado",
-        "Blackberry",
-        "Blackcurrant",
-        "Coconut",
-        "Custard apple",
-        "Dragonfruit",
-        "Durian",
-        "Elderberry",
-        "Feijoa",
-        "Gooseberry",
-        "Grapefruit",
-        "Honeyberry",
-        "Huckleberry",
-    ]
-    return hardcoded_data
+def get_YI_data_new(inserted_id):
+    header = {"content-type": "application/json"}
+    data = json.dumps({"insertedId": inserted_id})
+    url = "http://100061.pythonanywhere.com/function/"
+    response = requests.request("POST", url, data=data, headers=header).json()
+    data = response["finalOutput"]
+    return data
 
 
 def snowball_sampling_data():
@@ -102,6 +70,18 @@ def snowball_sampling_data():
     ]
     return data
 
+@csrf_exempt
+def insert_data(request):
+    if request.method == 'POST':
+        try:
+            data_str = request.body.decode('utf-8')
+            if not data_str:
+                raise ValueError("No data provided in the request body.")
+            data = json.loads(data_str)
+            response = dowellConnection('insert', data, '')
+            return JsonResponse(response)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
 
 def all_sampling(raw_data):
     try:
