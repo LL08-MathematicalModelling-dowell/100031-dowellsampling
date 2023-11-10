@@ -125,7 +125,7 @@ const handleError =(e)=>{
  }
  const handleConfidenceLevel =(e)=>{
 const es = e.target.value
-  if(es <= 1 && es >= 0){ 
+  if(es <= 100 && es >= 0){ 
     setValueExceedCL(false)
   set_confidence_level(e.target.value)
   setDisableButton(false)
@@ -231,7 +231,7 @@ const es = e.target.value
   <td>
     {
         conf && <>
-         <input type='number' required min='0' max="1" className="form-control" placeholder='Range 0 to 1'  onChange={(e)=>handleConfidenceLevel(e)}/>
+         <input type='number' required min='0' max="1" className="form-control" placeholder='Range 0 to 100'  onChange={(e)=>handleConfidenceLevel(e)}/>
        {/* <select className="form-control " onChange={(e)=>set_confidence_level(e.target.value)}>
         <option disabled>--select--</option>
         <option>0.90</option>
@@ -241,7 +241,7 @@ const es = e.target.value
         </>
         }
   </td>
-  {valueExceedCL && <td><p>Range (0 - 1)<span style={{color:"red"}}>*</span></p></td>}
+  {valueExceedCL && <td><p>Range (0 - 100)<span style={{color:"red"}}>*</span></p></td>}
   </tr>
   <tr>
     <button onClick={handleSubmit} className="btn btn-primary" disabled={disableButton} >Submit</button>
