@@ -50,12 +50,30 @@ def get_YI_data(inserted_id):
 
 
 def get_YI_data_new(inserted_id):
-    header = {"content-type": "application/json"}
-    data = json.dumps({"insertedId": inserted_id})
-    url = "http://100061.pythonanywhere.com/function/"
-    response = requests.request("POST", url, data=data, headers=header).json()
-    data = response["finalOutput"]
-    return data
+    url = "http://uxlivinglab.pythonanywhere.com"
+    payload = json.dumps({
+        "cluster": "dowellfunctions",
+        "database": "dowellfunctions",
+        "collection": "permutations",
+        "document": "permutations",
+        "team_member_ID": "1195001",
+        "function_ID": "ABCDE",
+        "command": 'fetch',
+        "field": {"_id": f'{inserted_id}'},
+        "update_field": '',
+        "platform": "bangalore"
+        })
+
+    headers = {
+        'Content-Type': 'application/json'
+    }
+    response = requests.request("POST", url, headers=headers, data=payload).json()
+    data = json.loads(response)
+    result_list = data.get('data', []) 
+    cleaned_list = [{key: value for key, value in item.items() if key != '_id'} for item in result_list]
+    data_values = cleaned_list[0]['country']
+    data_list = data_values.split(',')
+    return data_list
 
 
 def snowball_sampling_data():
@@ -87,11 +105,14 @@ def insert_data(request):
 def all_sampling(raw_data):
     try:
         inserted_id = raw_data.get("insertedId")
+        print(inserted_id)
         population_size = raw_data.get("populationSize")
         Yi_data_type = raw_data.get("result")
         sampling = raw_data.get("sampling")
         if Yi_data_type == "api":
-            Yi = get_YI_data_new()
+            Yi = get_YI_data_new(inserted_id)
+            print("running api")
+            print(Yi,"yi")
         elif Yi_data_type == "link":
             excel_link = raw_data.get("link")
             if excel_link:
