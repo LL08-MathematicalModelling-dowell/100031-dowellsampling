@@ -6,17 +6,17 @@ import time
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse, HttpResponse
 
-from API.functions.stratifiedSampling import dowellStratifiedSampling
-from API.functions.sampleSize import dowellSampleSize
-from API.functions.systematic_sampling import dowellSystematicSampling
-from API.functions.simpleRandomSampling import dowellSimpleRandomSampling
-from API.functions.clusterSampling import dowellClusterSampling
-from API.functions.purposiveSampling import dowellPurposiveSampling
-from API.functions.quotaSampling import dowellQuotaSampling
-from API.functions.ppsSampling import dowellppsSampling
-from API.functions.get_event_id import get_event_id
-from API.functions.API_Key_System import processApikey
-from API.functions.snowballSampling import dowellSnowballSampling
+from .functions.stratifiedSampling import dowellStratifiedSampling
+from .functions.sampleSize import dowellSampleSize
+from .functions.systematic_sampling import dowellSystematicSampling
+from .functions.simpleRandomSampling import dowellSimpleRandomSampling
+from .functions.clusterSampling import dowellClusterSampling
+from .functions.purposiveSampling import dowellPurposiveSampling
+from .functions.quotaSampling import dowellQuotaSampling
+from .functions.ppsSampling import dowellppsSampling
+from .functions.get_event_id import get_event_id
+from .functions.API_Key_System import processApikey
+from .functions.snowballSampling import dowellSnowballSampling
 
 
 def dowellConnection(command, field, update_field):
@@ -105,10 +105,13 @@ def insert_data(request):
 def all_sampling(raw_data):
     try:
         inserted_id = raw_data.get("insertedId")
-        print(inserted_id)
+        print('insertedId is ', inserted_id)
         population_size = raw_data.get("populationSize")
+        print('Populations size is ', population_size)
         Yi_data_type = raw_data.get("result")
+        print('data type ', Yi_data_type)
         sampling = raw_data.get("sampling")
+        print('Sampling is ', sampling)
         if Yi_data_type == "api":
             Yi = get_YI_data_new(inserted_id)
             print("running api")
@@ -121,6 +124,7 @@ def all_sampling(raw_data):
                 print(df)
                 list_of_lists = df.values.T.tolist()
                 Yi = list_of_lists
+                
             else:
                 return {"error": "No link provided."}
         else:
