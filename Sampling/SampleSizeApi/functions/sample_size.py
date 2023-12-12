@@ -10,7 +10,8 @@ def calculate_sample_size(data):
     try:
         population_size = data.get('population_size')
         error = float(data.get('error', 0))
-        confidence_level = float(data.get('confidence_level'))
+        confidence_level = float(data.get('confidence_level', 95))
+        confidence_level /= 100
         standard_deviation = data.get('standard_deviation')
         
         if standard_deviation is not None:
