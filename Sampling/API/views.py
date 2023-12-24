@@ -121,8 +121,9 @@ def all_sampling(raw_data):
             if excel_link:
                 print("running excel link")
                 df = pd.read_csv(excel_link)
-                print(df)
+                print('This is df ', df)
                 list_of_lists = df.values.T.tolist()
+                print('This is df ', list_of_lists)
                 Yi = list_of_lists
                 
             else:

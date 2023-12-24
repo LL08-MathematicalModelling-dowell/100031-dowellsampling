@@ -37,3 +37,10 @@ def sample_size_api(request, api_key):
             })
     else:
         return HttpResponse("Method Not Allowed")
+
+
+@csrf_exempt
+def health_check(request):
+    print('Hello World!')
+    if (request.method=="GET"):
+        return JsonResponse({"status": "ok"})
