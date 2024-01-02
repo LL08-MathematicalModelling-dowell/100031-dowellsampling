@@ -44,7 +44,9 @@ if(conf){
     }
   }
 console.log(data)
- fetch("https://100102.pythonanywhere.com/sample-size/", {
+//  fetch("https://100102.pythonanywhere.com/sample-size/", {
+//  fetch("http://127.0.0.1:8000/sample-size/", {
+  fetch("https://100031.pythonanywhere.com/sample-size/", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -56,6 +58,7 @@ console.log(data)
   .then((data) => {
     if(data.error)
     {
+      console.log('Error data, ', data.error)
       alert("Check your inputs!")
       setButtonClicked(false)
     }
