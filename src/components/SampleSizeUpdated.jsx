@@ -60,8 +60,7 @@ if(conf){
     }
   }
 console.log(data)
-//  fetch("https://100102.pythonanywhere.com/sample-size/", {
- fetch("https://100031.pythonanywhere.com/sample-size/", {
+ fetch("https://100102.pythonanywhere.com/sample-size/", {
   // fetch("http://127.0.0.1:8000/sample-size/", {
   method: "POST",
   headers: {
