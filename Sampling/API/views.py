@@ -105,26 +105,32 @@ def insert_data(request):
 def all_sampling(raw_data):
     try:
         inserted_id = raw_data.get("insertedId")
-        print('insertedId is ', inserted_id)
+        # print('insertedId is ', inserted_id)
         population_size = raw_data.get("populationSize")
-        print('Populations size is ', population_size)
+        # print('Populations size is ', population_size)
         Yi_data_type = raw_data.get("result")
-        print('data type ', Yi_data_type)
+        # print('data type ', Yi_data_type)
         sampling = raw_data.get("sampling")
-        print('Sampling is ', sampling)
+        # print('Sampling is ', sampling)
         if Yi_data_type == "api":
             Yi = get_YI_data_new(inserted_id)
-            print("running api")
-            print(Yi,"yi")
+            # print("running api")
+            # print(Yi,"yi")
         elif Yi_data_type == "link":
             excel_link = raw_data.get("link")
             if excel_link:
-                print("running excel link")
+                
+                
+                sample_size = raw_data.get("sample_size")
+                # print("running excel link")
                 df = pd.read_csv(excel_link)
-                print('This is df ', df)
+                # print('This is df ', df)
                 list_of_lists = df.values.T.tolist()
                 print('This is df ', list_of_lists)
                 Yi = list_of_lists
+                
+                population_sizes = df.shape[0]
+                print("Population size:", population_sizes)
                 
             else:
                 return {"error": "No link provided."}
@@ -136,10 +142,35 @@ def all_sampling(raw_data):
                 "insertedId": inserted_id,
                 "population": Yi,
                 "population_size": population_size,
+                # new undates
+                'populations': population_sizes,
+                'sample_size': sample_size,
+                "sam": df,
             }
             samples = dowellSystematicSampling(systematicSamplingInput)
-            response = {"samples": samples}
+            sample = samples.values.T.tolist()
+            # dic = samples.to_dict('series')
+            # print('This are the samples ',dic)
+            # response = {"samples": samples}
+            # print('This is type of response ', type(response))
+            
+            # systematic_sample_json = response.to_json(orient='records')
+            # systematic_sample_json = json.dumps(response)
+            # systematic_sample_json = response.to_json(orient='records')
+            # systematic_sample_json = json.dumps(response)
+
+            # Return the data as a JSON response
+            # return JsonResponse(systematic_sample_json, safe=False)
+            # return response
+            # systematic_sample_json = response.to_json(orient='records')
+
+            # # Return the JSON string as a JsonResponse
+            # return JsonResponse(json.loads(systematic_sample_json), safe=False)
+            # systematic_sample_dict = response.to_dict(orient='records')
+            # print('Type is ', type(systematic_sample_dict))
+            response = {"samples": sample}
             return response
+        
 
         elif sampling == "simple_random_sampling":
             error = raw_data.get("error")
@@ -155,6 +186,7 @@ def all_sampling(raw_data):
             }
             samples = dowellSimpleRandomSampling(simpleRandomSamplingInput)
             response = {"samples": samples["sampleUnits"]}
+            print('This is type ',response)
             return response
 
         elif sampling == "purposive_sampling":
