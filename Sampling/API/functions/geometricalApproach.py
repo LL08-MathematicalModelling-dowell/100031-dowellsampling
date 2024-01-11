@@ -1,9 +1,23 @@
 from random import randrange
+import random
 
-def dowellGeometricalFunction(N, n, Yi):
+def dowellGeometricalFunction(N, n, Yi, data, sample_sizes):
+    
+    lower_case_columns = [col.lower() for col in data.columns]
+    lat_min, lat_max = lower_case_columns['latitude'].min(), lower_case_columns['latitude'].max()
+    lon_min, lon_max = lower_case_columns['longitude'].min(), lower_case_columns['longitude'].max()
+    
+    random_lat = random.uniform(lat_min, lat_max)
+    random_lon = random.uniform(lon_min, lon_max)
+    
+    selected_rows = data[(data['latitude'] == random_lat) & (data['longitude'] == random_lon)]
+    
     # inscribe the circle randomly by starting from a random index
+    
     start = randrange(0, N)
+    print('This is the start ', start)
     Yi = Yi[start:] + Yi[:start]
+    print('This is Yi ', Yi)
     # partition the population list into 3 parts corresponding to the areas
     # where the triangle touches the circle x, y and z are the three regions
     # in which the triangle will rotate

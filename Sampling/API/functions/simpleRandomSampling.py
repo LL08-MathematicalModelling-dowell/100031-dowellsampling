@@ -1,7 +1,7 @@
-from API.functions.sampleSize import dowellSampleSize
-from API.functions.geometricalApproach import dowellGeometricalFunction
-from API.functions.randomGeneration import dowellRandomGeneration
-from API.functions.mechanicalRandomisation import dowellRandomTable
+from .sampleSize import dowellSampleSize
+from .geometricalApproach import dowellGeometricalFunction
+from .randomGeneration import dowellRandomGeneration
+from .mechanicalRandomisation import dowellRandomTable
 from statistics import pvariance
 from random import shuffle
 
@@ -10,6 +10,8 @@ def dowellSimpleRandomSampling(simpleRandomSamplingInput):
     N = simpleRandomSamplingInput['N']
     n = simpleRandomSamplingInput['n']
     method = simpleRandomSamplingInput['method']
+    data = simpleRandomSamplingInput['sam']
+    sample_sizes = simpleRandomSamplingInput['sample_size']
     # print(Yi)
     # lengths = [len(item) for sublist in Yi for item in sublist]
     # variance = pvariance(lengths)
@@ -22,11 +24,17 @@ def dowellSimpleRandomSampling(simpleRandomSamplingInput):
         simpleRandomSamplingOutput['status'] = False
     else:
         if method == 'geometricalApproach':
-            simpleRandomSamplingOutput['sampleUnits'] = dowellGeometricalFunction(N, n, Yi)
+            lower_case_columns = [col.lower() for col in data.columns]
+            if 'age' in lower_case_columns and 'gender' in lower_case_columns:
+                simpleRandomSamplingOutput['sampleUnits'] = dowellGeometricalFunction(N, n, Yi, sample_sizes, data)
+            else:
+                simpleRandomSamplingOutput['message'] = f'{method} is not a valid method. Select a valid method from geometricalApproach, mechanicalRandomisation, or randomNumberGeneration'
+                simpleRandomSamplingOutput['status'] = False
+            # simpleRandomSamplingOutput['sampleUnits'] = dowellGeometricalFunction(N, n, Yi)
         elif method == 'mechanicalRandomisation':
-            simpleRandomSamplingOutput['sampleUnits'] = dowellRandomTable(N, n, Yi)
+            simpleRandomSamplingOutput['sampleUnits'] = dowellRandomTable(N, n, Yi, sample_sizes)
         elif method == 'randomNumberGeneration':
-            simpleRandomSamplingOutput['sampleUnits'] = dowellRandomGeneration(N, n, Yi)
+            simpleRandomSamplingOutput['sampleUnits'] = dowellRandomGeneration(N, n, Yi, sample_sizes)
         else:
             simpleRandomSamplingOutput['message'] = f'{method} is not a valid method. Select a valid method from geometricalApproach, mechanicalRandomisation, or randomNumberGeneration'
             simpleRandomSamplingOutput['status'] = False

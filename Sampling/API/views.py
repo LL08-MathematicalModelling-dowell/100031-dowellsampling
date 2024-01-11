@@ -183,6 +183,10 @@ def all_sampling(raw_data):
                 "e": float(error),
                 "method": method,
                 "n": n,
+                # new undates
+                'populations': population_sizes,
+                'sample_size': sample_size,
+                "sam": df,
             }
             samples = dowellSimpleRandomSampling(simpleRandomSamplingInput)
             response = {"samples": samples["sampleUnits"]}

@@ -8,6 +8,9 @@ def dowellSystematicSampling(systematicSamplingInput):
     total_population = int(systematicSamplingInput['populations'])
     sample_sizes = int(systematicSamplingInput['sample_size'])
     
+    error_margin = 0.05
+    nn = dowellSampleSize(total_population, error_margin)
+    print('NN is ', nn)
     K = round(total_population/sample_sizes)
     
     print('This is the sampling interval ', K)
