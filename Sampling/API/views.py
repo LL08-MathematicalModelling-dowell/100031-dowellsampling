@@ -140,8 +140,8 @@ def all_sampling(raw_data):
         if sampling == "systematic_sampling":
             systematicSamplingInput = {
                 "insertedId": inserted_id,
-                "population": Yi,
-                "population_size": population_size,
+                # "population": Yi,
+                # "population_size": population_size,
                 # new undates
                 'populations': population_sizes,
                 'sample_size': sample_size,
@@ -201,19 +201,24 @@ def all_sampling(raw_data):
             # new_yi = sum(Yi, [])
             # print("new yi",new_yi)
             # print("unit", unit)
+            print('Ove here!')
             purposiveSamplingInput = {
                 "insertedId": inserted_id,
                 "Yi": Yi,
                 "unit": unit,
                 "error": float(error),
                 "populationSize": int(population_size),
+                # ============
+                'populations': population_sizes,
+                'sample_size': sample_size,
+                "sam": df,
             }
 
             samples = dowellPurposiveSampling(purposiveSamplingInput)
             # id = get_event_id()
-            response = {
-                "samples": samples,
-            }
+            
+            sample = samples.values.T.tolist()
+            response = {"samples": sample}
             return response
 
         elif sampling == "cluster_sampling":
