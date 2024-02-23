@@ -21,7 +21,7 @@ def dowellSystematicSampling(systematicSamplingInput):
     
     systematic_sample = df.iloc[random_starting_point-1::K]
     
-    
+    return systematic_sample
     # Yi = systematicSamplingInput['population']
     
     # N = int(systematicSamplingInput['population_size'])
@@ -54,4 +54,4 @@ def dowellSystematicSampling(systematicSamplingInput):
     #     k = round(k)
     #     sample_units = [Yi[ind] for ind in range(0, N, k)]
     # return sample_units
-    return systematic_sample
+    

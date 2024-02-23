@@ -105,32 +105,23 @@ def insert_data(request):
 def all_sampling(raw_data):
     try:
         inserted_id = raw_data.get("insertedId")
-        # print('insertedId is ', inserted_id)
         population_size = raw_data.get("populationSize")
-        # print('Populations size is ', population_size)
         Yi_data_type = raw_data.get("result")
-        # print('data type ', Yi_data_type)
+        strata_variable = raw_data.get("strata_variable")
         sampling = raw_data.get("sampling")
-        # print('Sampling is ', sampling)
+        cluster = raw_data.get('cluster')
         if Yi_data_type == "api":
             Yi = get_YI_data_new(inserted_id)
-            # print("running api")
-            # print(Yi,"yi")
         elif Yi_data_type == "link":
             excel_link = raw_data.get("link")
             if excel_link:
                 
-                
                 sample_size = raw_data.get("sample_size")
-                # print("running excel link")
                 df = pd.read_csv(excel_link)
-                # print('This is df ', df)
                 list_of_lists = df.values.T.tolist()
-                print('This is df ', list_of_lists)
                 Yi = list_of_lists
                 
                 population_sizes = df.shape[0]
-                print("Population size:", population_sizes)
                 
             else:
                 return {"error": "No link provided."}
@@ -150,9 +141,7 @@ def all_sampling(raw_data):
             samples = dowellSystematicSampling(systematicSamplingInput)
             sample = samples.values.T.tolist()
             # dic = samples.to_dict('series')
-            # print('This are the samples ',dic)
             # response = {"samples": samples}
-            # print('This is type of response ', type(response))
             
             # systematic_sample_json = response.to_json(orient='records')
             # systematic_sample_json = json.dumps(response)
@@ -167,7 +156,6 @@ def all_sampling(raw_data):
             # # Return the JSON string as a JsonResponse
             # return JsonResponse(json.loads(systematic_sample_json), safe=False)
             # systematic_sample_dict = response.to_dict(orient='records')
-            # print('Type is ', type(systematic_sample_dict))
             response = {"samples": sample}
             return response
         
@@ -190,28 +178,23 @@ def all_sampling(raw_data):
             }
             samples = dowellSimpleRandomSampling(simpleRandomSamplingInput)
             response = {"samples": samples["sampleUnits"]}
-            print('This is type ',response)
             return response
 
         elif sampling == "purposive_sampling":
-            print("purposive sampling running ")
             error = raw_data.get("error")
             unit = raw_data.get("unit")
-            # print("yi", Yi)
-            # new_yi = sum(Yi, [])
-            # print("new yi",new_yi)
-            # print("unit", unit)
-            print('Ove here!')
+            
             purposiveSamplingInput = {
                 "insertedId": inserted_id,
                 "Yi": Yi,
                 "unit": unit,
                 "error": float(error),
-                "populationSize": int(population_size),
+                "populationSize": int(population_sizes),
                 # ============
                 'populations': population_sizes,
                 'sample_size': sample_size,
                 "sam": df,
+                
             }
 
             samples = dowellPurposiveSampling(purposiveSamplingInput)
@@ -228,24 +211,32 @@ def all_sampling(raw_data):
             clusterSamplingInput = {
                 "Yi": Yi,
                 "e": float(error),
-                "N": int(population_size),
+                "N": int(population_sizes),
                 "M": int(numberOfClusters),
                 "hi": int(sizeOfCluster),
+                # ==============
+                'populations': population_sizes,
+                'sample_size': sample_size,
+                "sam": df,
+                "cluster": cluster,
             }
 
-            samples = dowellClusterSampling(clusterSamplingInput)
+            sample = dowellClusterSampling(clusterSamplingInput)
             # id = get_event_id()
-            response = {
-                "samples": samples,
-            }
-
+            # response = {
+            #     "samples": samples,
+            # }
+            samples = sample.values.T.tolist()            
+            response = {"samples": samples}
             return response
 
         elif sampling == "stratified_sampling":
+            print("Running....")
             allocation_type = raw_data.get("allocationType")
             sampling_type = raw_data.get("samplingType")
             replacement = raw_data.get("replacement")
             error = raw_data.get("error")
+            print('This is errors ', error)
             stratifiedSamplingInput = {
                 "insertedId": inserted_id,
                 "e": error,
@@ -253,40 +244,68 @@ def all_sampling(raw_data):
                 "samplingType": sampling_type,
                 "replacement": replacement,
                 "Yi": Yi,
-                "populationSize": population_size,
+               
+                # ==============
+                'populations': population_sizes,
+                'sample_size': sample_size,
+                "sam": df,
+                "strata_variable": strata_variable,
             }
-            # print("stratified sampling input", stratifiedSamplingInput)
-            samples = dowellStratifiedSampling(stratifiedSamplingInput)
+            print('Here is where i am', dowellStratifiedSampling(stratifiedSamplingInput))
+            sample = dowellStratifiedSampling(stratifiedSamplingInput)
+            # print('This is samples... ', samples)
             # id = get_event_id()
-            response = {
-                "samples": samples,
-            }
-
+            # response = {
+            #     "samples": samples,
+            # }
+            # print("Startifies sampling data is ", response)
+            samples = sample.values.T.tolist()            
+            response = {"samples": samples}
+            # return response
             return response
 
         elif sampling == "quota_sampling":
+            
             allocation_type = raw_data.get("allocationType")
+            quota_categories = raw_data.get("quota_categories")
             quotaSamplingInput = {
                 "population_units": Yi,
                 "population_size": population_size,
                 "unit": allocation_type,
+                # ========
+                'populations': population_sizes,
+                'sample_size': sample_size,
+                "sam": df,
+                "quota_categories": quota_categories,
             }
-
-            samples = dowellQuotaSampling(Yi, population_size, allocation_type)
+            sample = dowellQuotaSampling(quotaSamplingInput)
+            
+            # quota_sample = df.head(sample_size)
+            # sample =quota_sample
             # id = get_event_id()
+            samples = sample.values.T.tolist()            
+            # response = {"samples": samples}
             response = {"samples": samples}
             return response
 
         elif sampling == "pps_sampling":
             size = raw_data.get("size")
+            size_column = raw_data.get("size_column")
             ppsSamplingInputs = {
                 "population_units": Yi,
-                "population_size": population_size,
+                "population_size": population_sizes,
                 "size": size,
+                # ===========
+                'populations': population_sizes,
+                'sample_size': sample_size,
+                "sam": df,
+                "size_column": size_column
             }
-            samples, process_time = dowellppsSampling(ppsSamplingInputs)
-            print(samples)
+            # samples, process_time = dowellppsSampling(ppsSamplingInputs)
+            sample = dowellppsSampling(ppsSamplingInputs)
+            samples = sample.values.T.tolist() 
             return {"samples": samples}
+        
         elif sampling == "snowball_sampling":
             error = raw_data.get("error")
             reference = raw_data.get("reference")
@@ -302,7 +321,6 @@ def all_sampling(raw_data):
             samples = dowellSnowballSampling(
                 population_units, population_size, sample_size, reference
             )
-            print(samples)
             return {"samples": samples}
         else:
             return {"message": f"{sampling} is not valid."}
@@ -388,9 +406,7 @@ def dowelltwostagesampling(number_of_stages, sampling_method, body):
     # Iterate over each stage
     i = 0
     while i < S:
-        print(sampling_method[i])
-
-        print(f"\nStage {i}:")
+        
 
         # Choose the sampling method for the current stage
         # sampling_method = dowellindex()
@@ -399,7 +415,6 @@ def dowelltwostagesampling(number_of_stages, sampling_method, body):
 
         # Check if the user entered "0" for the current stage
         if sampling_method[i] == 0:
-            print("Sampling stopped.")
             break
         # Check if the selected sampling method is Simple Random Sampling
         elif sampling_method[i] == 1 or sampling_method[i] == 2:
@@ -418,7 +433,6 @@ def dowelltwostagesampling(number_of_stages, sampling_method, body):
             sample = dowellPurposiveSampling(body)
         # Check if the selected sampling method is PPS Sampling
         elif sampling_method[i] == 9 or sampling_method[i] == 10:
-            print(body)
             sample = dowellppsSampling(body)
         # Check if the selected sampling method is Snowball Sampling
         elif sampling_method[i] == 11:
@@ -427,7 +441,6 @@ def dowelltwostagesampling(number_of_stages, sampling_method, body):
         elif sampling_method[i] == 12:
             sample = dowellQuotaSampling(body)
         else:
-            print("Invalid sampling method.")
             continue
         i += 1
         # Add the selected sample to the list of sample values
