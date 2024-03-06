@@ -279,11 +279,12 @@ def all_sampling(raw_data):
                 "quota_categories": quota_categories,
             }
             sample = dowellQuotaSampling(quotaSamplingInput)
-            
+            print('This is sample ', sample)
             # quota_sample = df.head(sample_size)
             # sample =quota_sample
             # id = get_event_id()
-            samples = sample.values.T.tolist()            
+            samples = sample.values.T.tolist() 
+                       
             # response = {"samples": samples}
             response = {"samples": samples}
             return response
@@ -313,13 +314,14 @@ def all_sampling(raw_data):
             population_units = snowball_sampling_data()
             population_size = len(snowball_sampling_data())
             snowballSamplingInputs = {
-                "population_size": population_size,
+                "population_size": population_sizes,
                 "sample_size": sample_size,
                 "population_units": snowball_sampling_data(),
                 "reference": reference,
             }
             samples = dowellSnowballSampling(
-                population_units, population_size, sample_size, reference
+                # population_units, population_size, sample_size, reference
+                snowballSamplingInputs
             )
             return {"samples": samples}
         else:
